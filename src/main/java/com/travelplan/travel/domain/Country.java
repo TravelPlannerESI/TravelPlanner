@@ -24,6 +24,8 @@ public class Country {
     private Integer countryId;
     private String countryStatus;
     private String countryName;
+    private Double lat;
+    private Double lng;
 
 //
 //    @OneToMany(mappedBy = "country")
