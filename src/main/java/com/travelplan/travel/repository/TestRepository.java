@@ -1,12 +1,12 @@
 package com.travelplan.travel.repository;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManager;
-
-
 @Repository
+@RequiredArgsConstructor
 public class TestRepository {
+
 
 //    private final JPAQueryFactory query;
 
