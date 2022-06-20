@@ -2,6 +2,7 @@ package com.travelplan.travel.domain;
 
 import com.travelplan.travel.domain.code.UserRole;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -25,11 +26,18 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @Builder
     public User(String userName, String email, String userPicture, UserRole userRole) {
         this.userName = userName;
         this.email = email;
         this.userPicture = userPicture;
         this.userRole = userRole;
+    }
+
+    public User update(String name, String picture) {
+        userName = name;
+        userPicture = picture;
+        return this;
     }
 
     //    @OneToMany(mappedBy = "user")
