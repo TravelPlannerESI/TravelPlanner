@@ -1,11 +1,12 @@
 package com.travelplan.global.config.auth.dto;
 
-import com.travelplan.global.config.auth.AttributeCodes;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.travelplan.travel.domain.User;
 import com.travelplan.travel.domain.code.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Map;
 

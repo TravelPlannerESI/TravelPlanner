@@ -8,9 +8,9 @@ import java.util.function.Function;
 @Getter
 @RequiredArgsConstructor
 public enum AttributeCodes {
-    KAKAO("nickname","account_email","profile_image_url"),
+    KAKAO("nickname","email","profile_image_url"),
     NAVER("name","email","profile_image"),
-    GOOGLE("name","eamil","picture");
+    GOOGLE("name","email","picture");
 
     private final String name;
     private final String email;
