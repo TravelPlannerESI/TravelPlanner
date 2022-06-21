@@ -28,12 +28,12 @@ public class SecurityConfig {
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-            http
+        http
                 .csrf().disable()
                 //URL별 권한 관리를 설정하는 옵션의 시작점이다.
                 .authorizeRequests()
                 .antMatchers("/", "/css/**", "/images/**",
-                        "/js/**", "/h2-console/**","/login**").permitAll()
+                        "/js/**", "/h2-console/**", "/login**").permitAll()
                 .antMatchers("/api/v1/**").hasRole(UserRole.USER.name())
                 //위에서 설정된값 이외에 나머지 요청들 설정 현재 설정은 인증된 사용자만 가능하게 변경했다.
                 .anyRequest().authenticated()
@@ -41,14 +41,15 @@ public class SecurityConfig {
                 .logout().deleteCookies("JSESSIONID")
                 .logoutSuccessUrl("/").permitAll()
                 .and()
-                    //권한이 없다면 ? -> 401내려준다.
+                //권한이 없다면 ? -> 401내려준다.
                 .exceptionHandling(e -> e
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                 )
                 .oauth2Login()
-                    .userInfoEndpoint().userService(customOAuth2UserService)
-                    .and()
-                    .successHandler((req, resp, auth) -> resp.sendRedirect("/"));
+                .userInfoEndpoint().userService(customOAuth2UserService)
+                .and()
+                .successHandler((req, resp, auth) -> resp.sendRedirect("/"));
+
         return http.build();
     }
 
