@@ -1,8 +1,6 @@
 package com.travelplan.global.config.api.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -10,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.*;
+
 @Getter
-@Setter
 @ToString
 public class CountryFormDto {
     private String country_iso_alp2;    // ISO 2자리 코드
@@ -39,26 +38,48 @@ public class CountryFormDto {
         List<WarningContentData> warningList = warningDto.getData();
         List<PcrContentData> pcrList = pcrDto.getData();
 
-        // PCR 정보를 Map 으로 Convert Map<ISO 문자, 컨텐츠>
-        Map<String, List<PcrContentData>> groupingPcr = pcrList.stream()
-                .filter(pcr -> pcr.getCountry_iso_alp2() != null)
-                .collect(Collectors.groupingBy(PcrContentData::getCountry_iso_alp2));
+        // 그룹핑
+        Map<String, PcrContentData> groupingPcr = getGroupingByPcr(pcrList);
 
-        List<CountryFormDto> countryList = new ArrayList<>();
+        // 조합
+        List<CountryFormDto> combineResult = combineWarningAndPcr(warningList, groupingPcr);
 
-        // 격리 정보를 루프로 돌려 ISO 문자로 groupingPcr(Map) 의 키값에 대입하여 정보를 얻어온다.
-        // 정보가 있을 시 List 에 add
+        return combineResult;
+    }
+
+    /**
+     * warningList 와 pcrList 의 값을 조합하는 메서드 (ISO 코드 기준)
+     * @param warningList
+     * @param groupingPcr
+     * @return List<CountryFormDto>
+     */
+    private static List<CountryFormDto> combineWarningAndPcr(List<WarningContentData> warningList, Map<String, PcrContentData> groupingPcr) {
+        // 반환 값을 담을 객체 생성
+        List<CountryFormDto> combineList = new ArrayList<>();
+
         for (WarningContentData warningContentData : warningList) {
-            List<PcrContentData> pcrContentData = groupingPcr.get(warningContentData.getCountry_iso_alp2());
+            PcrContentData pcrContentData = groupingPcr.get(warningContentData.getCountry_iso_alp2());
 
-            if(pcrContentData != null) {
-                PcrContentData pcrContentData1 = pcrContentData.get(0);
+            // 정보가 있을 시 List 에 add
+            if (pcrContentData != null)
+                combineList.add(new CountryFormDto(warningContentData, pcrContentData));
 
-                countryList.add(new CountryFormDto(warningContentData, pcrContentData1));
-            }
         }
 
-        return countryList;
+        return combineList;
+    }
+
+    /**
+     * PCR 정보를 Map 으로 Convert Map<ISO 문자, 컨텐츠>
+     * @param pcrList
+     * @return Map<String, List<PcrContentData>>
+     */
+    private static Map<String, PcrContentData> getGroupingByPcr(List<PcrContentData> pcrList) {
+        // ISO 값에 null 이 존재 하므로 null 값을 제외하고 그룹핑
+        return pcrList.stream()
+                .distinct()
+                .filter(pcr -> pcr.getCountry_iso_alp2() != null)
+                .collect(toMap(PcrContentData::getCountry_iso_alp2, o -> o));
     }
 
 }

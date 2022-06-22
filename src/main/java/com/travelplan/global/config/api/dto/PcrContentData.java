@@ -1,8 +1,10 @@
 package com.travelplan.global.config.api.dto;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(of = {"country_iso_alp2"})
 public class PcrContentData {
     private String country_iso_alp2; // ISO 2자리 코드
     private String country_nm;       // 한글 국가 명
