@@ -10,11 +10,12 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.PostConstruct;
 import java.util.Collections;
+import java.util.List;
 
 @Component
 public class RestTemplateApi {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private static final RestTemplate restTemplate = new RestTemplate();
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static CountryFormDto countryFormDto = null;
@@ -24,11 +25,13 @@ public class RestTemplateApi {
 
         // 요청 생성
         HttpEntity request = getJsonRequest();
-        WarningDto warningResult = fetch(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
-        PcrDto pcrResult = fetch(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
+        WarningDto warningDto = fetch(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
+        PcrDto pcrDto = fetch(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
 
-        warningResult.getData().stream().forEach(System.out::println);
-        pcrResult.getData().stream().forEach(System.out::println);
+        List<CountryFormDto> result = CountryFormDto.of(warningDto, pcrDto);
+        for (CountryFormDto formDto : result) {
+            System.out.println("formDto = " + formDto);
+        }
 
     }
 
@@ -75,5 +78,4 @@ public class RestTemplateApi {
         return new String[]{RestTemplateConst.SERVICE_KEY_VALUE, RestTemplateConst.RETURN_TYPE_VALUE,
                 RestTemplateConst.NUM_OF_ROWS_VALUE, RestTemplateConst.PAGE_NO_VALUE};
     }
-
 }
