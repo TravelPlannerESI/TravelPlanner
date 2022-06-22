@@ -4,6 +4,8 @@ import com.travelplan.global.config.api.constant.RestTemplateConst;
 import com.travelplan.global.config.api.dto.CountryFormDto;
 import com.travelplan.global.config.api.dto.PcrDto;
 import com.travelplan.global.config.api.dto.WarningDto;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -12,27 +14,29 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 import java.util.List;
 
+@Slf4j
+@RequiredArgsConstructor
 @Component
 public class RestTemplateApi {
 
     private static final RestTemplate restTemplate = new RestTemplate();
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
-    public static CountryFormDto countryFormDto = null;
+    public static List<CountryFormDto> countryFormList = null;
 
     @PostConstruct
     public void init() {
-
         // 요청 생성
         HttpEntity request = getJsonRequest();
-        WarningDto warningDto = fetch(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
-        PcrDto pcrDto = fetch(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
 
-        List<CountryFormDto> result = CountryFormDto.of(warningDto, pcrDto);
-        for (CountryFormDto formDto : result) {
-            System.out.println("formDto = " + formDto);
-        }
+        WarningDto warningDto = callApi(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
+        PcrDto pcrDto = callApi(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
 
+        log.info("warning size = {}", warningDto.getData().size());
+        log.info("pcr size = {}", pcrDto.getData().size());
+
+        countryFormList = CountryFormDto.of(warningDto, pcrDto);
+        log.info("combine size = {}", countryFormList.size());
     }
 
     /**
@@ -59,11 +63,11 @@ public class RestTemplateApi {
      * @param dtoClass
      * @return T
      */
-    private <T> T fetch(String url,
-                              HttpMethod httpMethod,
-                              HttpEntity request,
-                              Class<T> dtoClass,
-                              String... params) {
+    private <T> T callApi(String url,
+                          HttpMethod httpMethod,
+                          HttpEntity request,
+                          Class<T> dtoClass,
+                          String... params) {
 
         return restTemplate.exchange(
                 url,

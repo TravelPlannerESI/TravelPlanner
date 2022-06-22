@@ -6,7 +6,6 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.*;
 
@@ -33,8 +32,15 @@ public class CountryFormDto {
         wrt_dt = pcrDto.getWrt_dt();
     }
 
-    public static List<CountryFormDto> of(WarningDto warningDto, PcrDto pcrDto) {
+    private CountryFormDto(WarningContentData warningDto) {
+        country_iso_alp2 = warningDto.getCountry_iso_alp2();
+        country_nm = warningDto.getCountry_nm();
+        country_eng_nm = warningDto.getCountry_eng_nm();
+        alarm_lvl = warningDto.getAlarm_lvl();
+        written_dt = warningDto.getWritten_dt();
+    }
 
+    public static List<CountryFormDto> of(WarningDto warningDto, PcrDto pcrDto) {
         List<WarningContentData> warningList = warningDto.getData();
         List<PcrContentData> pcrList = pcrDto.getData();
 
@@ -60,10 +66,13 @@ public class CountryFormDto {
         for (WarningContentData warningContentData : warningList) {
             PcrContentData pcrContentData = groupingPcr.get(warningContentData.getCountry_iso_alp2());
 
-            // 정보가 있을 시 List 에 add
-            if (pcrContentData != null)
+            // warning 정보가 기준이 된다 (data 의 수가 더 많기 때문)
+            // PCR 정보가 없을 시 warning 정보만 add
+            if (pcrContentData == null) {       // 매핑 정보(PCR)가 없을 시
+                combineList.add(new CountryFormDto(warningContentData));
+            } else {                            // 매핑 정보(PCR)가 없을 시
                 combineList.add(new CountryFormDto(warningContentData, pcrContentData));
-
+            }
         }
 
         return combineList;
@@ -77,7 +86,7 @@ public class CountryFormDto {
     private static Map<String, PcrContentData> getGroupingByPcr(List<PcrContentData> pcrList) {
         // ISO 값에 null 이 존재 하므로 null 값을 제외하고 그룹핑
         return pcrList.stream()
-                .distinct()
+                .distinct()     // ISO 기준으로 동일하다면 제거
                 .filter(pcr -> pcr.getCountry_iso_alp2() != null)
                 .collect(toMap(PcrContentData::getCountry_iso_alp2, o -> o));
     }
