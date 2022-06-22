@@ -1,4 +1,4 @@
-package com.travelplan.travel.domain;
+package com.travelplan.global.entity.base;
 
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;

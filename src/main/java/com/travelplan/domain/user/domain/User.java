@@ -1,13 +1,12 @@
-package com.travelplan.travel.domain;
+package com.travelplan.domain.user.domain;
 
-import com.travelplan.travel.domain.code.UserRole;
+import com.travelplan.global.entity.code.UserRole;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.lang.annotation.Target;
 
 @Entity
 @Getter

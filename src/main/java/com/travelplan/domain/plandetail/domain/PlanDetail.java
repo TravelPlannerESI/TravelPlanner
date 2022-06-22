@@ -1,6 +1,7 @@
-package com.travelplan.travel.domain;
+package com.travelplan.domain.plandetail.domain;
 
-import com.travelplan.travel.domain.code.Vehicle;
+import com.travelplan.domain.plan.domain.Plan;
+import com.travelplan.global.entity.code.Vehicle;
 import lombok.Getter;
 
 import javax.persistence.*;

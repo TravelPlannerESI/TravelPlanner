@@ -1,4 +1,4 @@
-package com.travelplan.travel.domain;
+package com.travelplan.domain.country.domain;
 
 import lombok.AccessLevel;
 import lombok.Getter;

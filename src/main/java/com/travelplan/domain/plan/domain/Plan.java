@@ -1,5 +1,6 @@
-package com.travelplan.travel.domain;
+package com.travelplan.domain.plan.domain;
 
+import com.travelplan.domain.travel.domain.Travel;
 import lombok.Getter;
 
 import javax.persistence.*;

@@ -1,8 +1,7 @@
-package com.travelplan.travel.repository;
+package com.travelplan.domain.travel.repository;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelplan.travel.domain.Menu;
-import com.travelplan.travel.domain.QMenu;
+import com.travelplan.domain.menu.entity.Menu;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;

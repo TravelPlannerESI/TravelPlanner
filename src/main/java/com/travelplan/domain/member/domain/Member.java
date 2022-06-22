@@ -1,7 +1,9 @@
-package com.travelplan.travel.domain;
+package com.travelplan.domain.member.domain;
 
-import com.travelplan.travel.domain.code.JoinStatus;
-import com.travelplan.travel.domain.code.MemberRole;
+import com.travelplan.domain.travel.domain.Travel;
+import com.travelplan.domain.user.domain.User;
+import com.travelplan.global.entity.code.JoinStatus;
+import com.travelplan.global.entity.code.MemberRole;
 import lombok.Getter;
 
 import javax.persistence.*;

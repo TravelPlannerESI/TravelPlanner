@@ -1,4 +1,4 @@
-package com.travelplan.travel.domain.code;
+package com.travelplan.global.entity.code;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

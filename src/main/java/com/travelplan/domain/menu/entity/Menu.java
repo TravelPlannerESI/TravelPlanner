@@ -1,4 +1,4 @@
-package com.travelplan.travel.domain;
+package com.travelplan.domain.menu.entity;
 
 import lombok.AccessLevel;
 import lombok.Getter;

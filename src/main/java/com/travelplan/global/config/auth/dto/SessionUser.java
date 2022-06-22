@@ -1,6 +1,6 @@
 package com.travelplan.global.config.auth.dto;
 
-import com.travelplan.travel.domain.User;
+import com.travelplan.domain.user.domain.User;
 import lombok.Getter;
 
 import java.io.Serializable;

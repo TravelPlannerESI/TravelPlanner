@@ -1,6 +1,6 @@
-package com.travelplan.travel.repository;
+package com.travelplan.domain.travel.repository;
 
-import com.travelplan.travel.domain.User;
+import com.travelplan.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

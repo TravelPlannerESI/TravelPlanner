@@ -1,11 +1,10 @@
-package com.travelplan.travel.dto;
+package com.travelplan.domain.travel.dto;
 
-import com.travelplan.travel.domain.Menu;
+import com.travelplan.domain.menu.entity.Menu;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 public class MenuDto {

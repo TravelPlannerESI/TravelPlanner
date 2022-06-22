@@ -1,5 +1,6 @@
-package com.travelplan.travel.domain;
+package com.travelplan.domain.travel.domain;
 
+import com.travelplan.domain.country.domain.Country;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
