@@ -3,6 +3,7 @@ package com.travelplan.travel.domain;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelplan.domain.menu.entity.Menu;
+import com.travelplan.domain.menu.entity.QMenu;
 import com.travelplan.domain.travel.repository.MenuRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,17 +14,19 @@ import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import java.util.List;
 
-import static com.travelplan.travel.domain.QMenu.menu;
+import static com.travelplan.domain.menu.entity.QMenu.menu;
+
 
 @SpringBootTest
 @Transactional
 @Rollback(value = false)
 class MenuTest {
 
-    @Autowired
+    @PersistenceContext
     EntityManager em;
 
     @Autowired
