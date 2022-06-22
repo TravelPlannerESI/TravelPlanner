@@ -15,7 +15,7 @@ public class PcrDto {
     List<PcrContentData> data;
 
     @Data
-    static class PcrContentData {
+    public static class PcrContentData {
         private String country_iso_alp2; // ISO 2자리 코드
         private String country_nm;       // 한글 국가 명
         private String country_eng_nm;   // 영문 국가 명
