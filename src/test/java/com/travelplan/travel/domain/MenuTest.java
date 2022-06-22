@@ -1,9 +1,9 @@
 package com.travelplan.travel.domain;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelplan.travel.repository.MenuRepository;
+import com.travelplan.domain.menu.entity.Menu;
+import com.travelplan.domain.travel.repository.MenuRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

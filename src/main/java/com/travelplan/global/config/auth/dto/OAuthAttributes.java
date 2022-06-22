@@ -1,7 +1,7 @@
 package com.travelplan.global.config.auth.dto;
 
-import com.travelplan.travel.domain.User;
-import com.travelplan.travel.domain.code.UserRole;
+import com.travelplan.domain.user.domain.User;
+import com.travelplan.global.entity.code.UserRole;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;

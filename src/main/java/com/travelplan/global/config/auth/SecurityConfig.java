@@ -1,6 +1,6 @@
 package com.travelplan.global.config.auth;
 
-import com.travelplan.travel.domain.code.UserRole;
+import com.travelplan.global.entity.code.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.autoconfigure.security.ConditionalOnDefaultWebSecurity;
