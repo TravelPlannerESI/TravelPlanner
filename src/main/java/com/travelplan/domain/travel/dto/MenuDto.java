@@ -5,12 +5,13 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class MenuDto {
 
-    public MenuDto(String shopRole, Integer lft, Integer rgt, Integer depth) {
-        this.shopRole = shopRole;
+    public MenuDto(String menuName, Integer lft, Integer rgt, Integer depth) {
+        this.menuName = menuName;
         this.lft = lft;
         this.rgt = rgt;
         this.depth = depth;
@@ -18,18 +19,18 @@ public class MenuDto {
 
     public MenuDto(Menu menu) {
         this.id = menu.getId();
-        this.shopRole = menu.getMenuName();
+        this.menuName = menu.getMenuName();
         this.lft = menu.getLft();
         this.rgt = menu.getRgt();
-//        this.shops = menu.getMenus().stream().map(MenuDto::new).collect(Collectors.toList());
+        this.menus = menu.getMenus().stream().map(MenuDto::new).collect(Collectors.toList());
         this.depth = menu.getDepth();
     }
 
     private Integer id;
-    private String shopRole;
+    private String menuName;
     private Integer lft;
     private Integer rgt;
-    List<MenuDto> shops = new ArrayList<>();
+    List<MenuDto> menus = new ArrayList<>();
     private Integer depth;
 
 

@@ -3,8 +3,11 @@ package com.travelplan.domain.menu.entity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -45,12 +48,22 @@ public class Menu {
     @JoinColumn(name = "parent_menu_id")
     private Menu parentMenuId;
 
+    @OneToMany(mappedBy = "parentMenuId" ,cascade = CascadeType.PERSIST)
+    private List<Menu> menus = new ArrayList<>();
+
     private Integer depth;
 
     public void addRgt(Integer rtg) {
         this.rgt += rtg;
     }
 
+    public void addMenu(Menu menu) {
+        menu.addParentMenu(this);
+        menus.add(menu);
+    }
 
+    public Menu addParentMenu(Menu parent) {
+        return this.parentMenuId = parent;
+    }
 
 }
