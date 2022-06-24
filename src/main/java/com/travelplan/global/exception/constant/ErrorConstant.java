@@ -1,4 +1,4 @@
-package com.travelplan.global.exception.dto;
+package com.travelplan.global.exception.constant;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
