@@ -2,6 +2,7 @@ package com.travelplan.global.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.travelplan.domain.zexceptionTest.TestDTO;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -28,6 +29,7 @@ class GlobalControllerAdviceTest {
 
 
     @Test
+    @DisplayName("Http GET - Success Response")
     public void get_성공() throws Exception {
 
         mvc.perform(get("/api/v1/tmp")
@@ -36,7 +38,9 @@ class GlobalControllerAdviceTest {
                 .andDo(print());
     }
 
+
     @Test
+    @DisplayName("Http GET - Exception Response")
     public void get_실패_500_예외발생() throws Exception {
 
         mvc.perform(get("/api/v1/tmp")
@@ -47,6 +51,7 @@ class GlobalControllerAdviceTest {
 
 
     @Test
+    @DisplayName("Http POST - Success Response")
     public void post_성공() throws Exception {
 
         String content = objectMapper.writeValueAsString(new TestDTO("아이디", "이름", "이메일", "전화번호호"));
@@ -60,6 +65,7 @@ class GlobalControllerAdviceTest {
     }
 
     @Test
+    @DisplayName("Http POST - Exception Response")
     public void post_실패_400_예외발생() throws Exception {
 
         String content = objectMapper.writeValueAsString(new TestDTO("아이디", "", "", "123456789101112"));
