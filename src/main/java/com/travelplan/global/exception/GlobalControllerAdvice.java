@@ -1,8 +1,8 @@
 package com.travelplan.global.exception;
 
+import com.travelplan.global.exception.constant.ErrorConstant;
 import com.travelplan.global.exception.dto.CustomErrorResult;
 import com.travelplan.global.exception.dto.CustomFieldError;
-import com.travelplan.global.exception.dto.ErrorConstant;
 import com.travelplan.global.exception.dto.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,10 +23,18 @@ public class GlobalControllerAdvice {
 
     private final MessageSource messageSource;
 
+
     /**
-     * RequestBody를 이용해 데이터를 받을때 예외가 터지면 MethodArgumentNotValidException이 터진다.
-     * @param e
-     * @return
+     * Global Form Validation 유효성 검사
+     *
+     * HTTP body의 데이터를 객체로 변환하는 과정에서 Validation오류가 있을 때 발생하는 Exception
+     *
+     * Validation Annotation
+     * javax.validation.constraints.NotBlank
+     * javax.validation.constraints.Length
+     * javax.validation.constraints.NotNull
+     *
+     * @return ResponseEntity<ErrorResponse < List < CustomFieldError>>>
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse<List<CustomFieldError>>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -47,12 +55,9 @@ public class GlobalControllerAdvice {
     }
 
 
-
-
-
-
     /**
      * errorResult 단건 객체
+     *
      * @param errorMsg - 메세지
      * @param constant -
      * @return ErrorResponse<CustomFieldError>
@@ -61,18 +66,17 @@ public class GlobalControllerAdvice {
         return new ErrorResponse(errorMsg, constant.getDetailErrorMsg(), constant.getAaa(), constant.getBbb());
     }
 
-
     /**
      * FieldErrors 다건 리스트
-     * @param errorMsg - 에러메세지
+     *
+     * @param errorMsg      - 에러메세지
      * @param bindingResult - 필드 에러 정보
      * @param messageSource - 필드 에러 메시지 출력
-     * @return ErrorResponse<List<CustomFieldError>>
+     * @return ErrorResponse<List < CustomFieldError>>
      */
     private ErrorResponse<List<CustomFieldError>> makeFieldErrors(String errorMsg, BindingResult bindingResult, MessageSource messageSource) {
         return new ErrorResponse<>(errorMsg, bindingResult, messageSource);
     }
-
 
 
 }
