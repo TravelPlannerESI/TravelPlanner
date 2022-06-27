@@ -18,6 +18,7 @@ public class BaseEntity {
     private LocalDateTime createdDate;
 
     @LastModifiedDate
+    @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
 
     //수정자 작성자 추가코드

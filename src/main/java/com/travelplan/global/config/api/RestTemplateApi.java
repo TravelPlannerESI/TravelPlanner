@@ -16,7 +16,7 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
+//@Component
 public class RestTemplateApi {
 
     private static final RestTemplate restTemplate = new RestTemplate();

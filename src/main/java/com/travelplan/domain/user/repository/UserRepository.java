@@ -1,4 +1,4 @@
-package com.travelplan.domain.travel.repository;
+package com.travelplan.domain.user.repository;
 
 import com.travelplan.domain.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;

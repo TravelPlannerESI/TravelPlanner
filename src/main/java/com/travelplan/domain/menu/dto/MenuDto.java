@@ -1,4 +1,4 @@
-package com.travelplan.domain.travel.dto;
+package com.travelplan.domain.menu.dto;
 
 import com.travelplan.domain.menu.entity.Menu;
 import lombok.Getter;

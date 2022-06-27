@@ -3,7 +3,7 @@ package com.travelplan.global.config.auth;
 import com.travelplan.global.config.auth.dto.OAuthAttributes;
 import com.travelplan.global.config.auth.dto.SessionUser;
 import com.travelplan.domain.user.domain.User;
-import com.travelplan.domain.travel.repository.UserRepository;
+import com.travelplan.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
