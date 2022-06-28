@@ -20,6 +20,9 @@ public class CountryFormDto {
     private Integer alarm_lvl;          // 경보 레벨
     private String written_dt;          // 작성일(경보)
     private String wrt_dt;              // 작성일(PCR)
+    private String lat;
+    private String lng;
+
 
     private CountryFormDto(WarningContentData warningDto, PcrContentData pcrDto) {
         country_iso_alp2 = warningDto.getCountry_iso_alp2();
@@ -31,7 +34,6 @@ public class CountryFormDto {
         written_dt = warningDto.getWritten_dt();
         wrt_dt = pcrDto.getWrt_dt();
     }
-
     private CountryFormDto(WarningContentData warningDto) {
         country_iso_alp2 = warningDto.getCountry_iso_alp2();
         country_nm = warningDto.getCountry_nm();
@@ -43,6 +45,7 @@ public class CountryFormDto {
     public static List<CountryFormDto> of(WarningDto warningDto, PcrDto pcrDto) {
         List<WarningContentData> warningList = warningDto.getData();
         List<PcrContentData> pcrList = pcrDto.getData();
+
 
         // 그룹핑
         Map<String, PcrContentData> groupingPcr = getGroupingByPcr(pcrList);
@@ -89,6 +92,95 @@ public class CountryFormDto {
                 .distinct()     // ISO 기준으로 동일하다면 제거
                 .filter(pcr -> pcr.getCountry_iso_alp2() != null)
                 .collect(toMap(PcrContentData::getCountry_iso_alp2, o -> o));
+    }
+
+
+
+
+    // js 추가
+    public static List<CountryFormDto> of2(WarningDto warningDto, PcrDto pcrDto, TravelMakerDto tmDto) {
+        List<WarningContentData> warningList = warningDto.getData();
+        List<PcrContentData> pcrList = pcrDto.getData();
+        List<TravelMakerContentData> travelContentList = tmDto.getResult();
+
+
+        // 그룹핑
+        Map<String, PcrContentData> groupingPcr = getGroupingByPcr(pcrList);
+        Map<String, TravelMakerContentData> groupingByTravelData = getGroupingByTravelData(travelContentList);
+
+        // 조합
+        List<CountryFormDto> combineResult = combineWarningAndPcrAndCoordination(warningList, groupingPcr, groupingByTravelData);
+
+        return combineResult;
+    }
+
+    // js 추가
+    private static List<CountryFormDto> combineWarningAndPcrAndCoordination(List<WarningContentData> warningList, Map<String, PcrContentData> groupingPcr, Map<String, TravelMakerContentData> groupingTmMap) {
+        // 반환 값을 담을 객체 생성
+        List<CountryFormDto> combineList = new ArrayList<>();
+
+        for (WarningContentData warningContentData : warningList) {
+            PcrContentData pcrContentData = groupingPcr.get(warningContentData.getCountry_iso_alp2());
+            TravelMakerContentData travelMakerContentData = groupingTmMap.get(warningContentData.getCountry_iso_alp2());
+
+            // warning 정보가 기준이 된다 (data 의 수가 더 많기 때문)
+            // PCR 정보가 없을 시 warning 정보만 add
+
+            if(pcrContentData == null && travelMakerContentData == null) {
+                combineList.add(new CountryFormDto(warningContentData));
+            } else if (pcrContentData == null && travelMakerContentData != null) {
+                combineList.add(new CountryFormDto(warningContentData, travelMakerContentData));
+            } else if (pcrContentData != null && travelMakerContentData == null) {
+                combineList.add(new CountryFormDto(warningContentData, pcrContentData));
+            } else {
+                combineList.add(new CountryFormDto(warningContentData, pcrContentData, travelMakerContentData));
+            }
+
+
+
+
+//            if (pcrContentData == null) {       // 매핑 정보(PCR)가 없을 시
+//                combineList.add(new CountryFormDto(warningContentData));
+//            } else {                            // 매핑 정보(PCR)가 없을 시
+//                combineList.add(new CountryFormDto(warningContentData, pcrContentData));
+//            }
+        }
+
+        return combineList;
+    }
+
+
+    // js 추가
+    private CountryFormDto(WarningContentData warningDto, PcrContentData pcrDto, TravelMakerContentData tmDto) {
+        country_iso_alp2 = warningDto.getCountry_iso_alp2();
+        country_nm = warningDto.getCountry_nm();
+        country_eng_nm = warningDto.getCountry_eng_nm();
+        title = pcrDto.getTitle();
+        txt_origin_cn = pcrDto.getTxt_origin_cn();
+        alarm_lvl = warningDto.getAlarm_lvl();
+        written_dt = warningDto.getWritten_dt();
+        wrt_dt = pcrDto.getWrt_dt();
+        lat = tmDto.getLat();
+        lng = tmDto.getLng();
+    }
+    // js 추가
+    private CountryFormDto(WarningContentData warningDto, TravelMakerContentData tmDto) {
+        country_iso_alp2 = warningDto.getCountry_iso_alp2();
+        country_nm = warningDto.getCountry_nm();
+        country_eng_nm = warningDto.getCountry_eng_nm();
+        alarm_lvl = warningDto.getAlarm_lvl();
+        written_dt = warningDto.getWritten_dt();
+        lat = tmDto.getLat();
+        lng = tmDto.getLng();
+    }
+
+    // js 추가
+    private static Map<String, TravelMakerContentData> getGroupingByTravelData(List<TravelMakerContentData> travelMakerContentDataList) {
+        // ISO 값에 null 이 존재 하므로 null 값을 제외하고 그룹핑
+        return travelMakerContentDataList.stream()
+                .distinct()     // ISO 기준으로 동일하다면 제거
+                .filter(travelData -> travelData.getCountry_code() != null)
+                .collect(toMap(TravelMakerContentData::getCountry_code, o -> o));
     }
 
 }

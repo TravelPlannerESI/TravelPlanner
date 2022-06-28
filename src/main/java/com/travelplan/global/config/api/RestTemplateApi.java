@@ -3,6 +3,7 @@ package com.travelplan.global.config.api;
 import com.travelplan.global.config.api.constant.RestTemplateConst;
 import com.travelplan.global.config.api.dto.CountryFormDto;
 import com.travelplan.global.config.api.dto.PcrDto;
+import com.travelplan.global.config.api.dto.TravelMakerDto;
 import com.travelplan.global.config.api.dto.WarningDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,13 +17,15 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-//@Component
+@Component
 public class RestTemplateApi {
 
     private static final RestTemplate restTemplate = new RestTemplate();
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static List<CountryFormDto> countryFormList = null;
+
+    private static final String URL = "https://www.travelmakerkorea.com/api/newsList";
 
     @PostConstruct
     public void init() {
@@ -31,12 +34,17 @@ public class RestTemplateApi {
 
         WarningDto warningDto = callApi(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
         PcrDto pcrDto = callApi(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
+        TravelMakerDto travelMakerDto = callApi(URL, HttpMethod.POST, request, TravelMakerDto.class);
+
 
         log.info("warning size = {}", warningDto.getData().size());
         log.info("pcr size = {}", pcrDto.getData().size());
+        log.info("travelMaker size = {}", travelMakerDto.getResult().size());
 
         countryFormList = CountryFormDto.of(warningDto, pcrDto);
-        log.info("combine size = {}", countryFormList.size());
+        log.info("combine1 size = {}", countryFormList.size());
+        countryFormList = CountryFormDto.of2(warningDto, pcrDto, travelMakerDto);
+        log.info("combine2 size = {}", countryFormList.size());
     }
 
     /**
