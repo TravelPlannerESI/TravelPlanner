@@ -1,7 +1,7 @@
 package com.travelplan.travel.domain;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelplan.domain.menu.entity.Menu;
+import com.travelplan.domain.menu.domain.Menu;
 import com.travelplan.domain.menu.repository.MenuRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;

@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 
 @EntityListeners(AuditingEntityListener.class)
 @MappedSuperclass
-public class BaseEntity {
+public class BaseDateEntity {
 
     @CreatedDate
     @Column(updatable = false)
@@ -20,15 +20,5 @@ public class BaseEntity {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private LocalDateTime lastModifiedDate;
-
-    //수정자 작성자 추가코드
-//    @CreatedBy
-//    @Column(updatable = false)
-//    private String createdBy;
-//
-//    @LastModifiedDate
-//    private String lastModifiedBy;
-
-
 
 }

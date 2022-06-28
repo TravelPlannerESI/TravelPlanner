@@ -16,7 +16,7 @@ public class TravelApi {
 
     @PostMapping("/api/v1/travel")
     public TravelDto saveTravel(@Validated @RequestBody TravelFormDto travelFormDto) {
-        TravelDto travelDto = travelService.saveTravel(travelFormDto);
+        TravelDto travelDto = travelService.addTravel(travelFormDto);
         return travelDto;
     }
 

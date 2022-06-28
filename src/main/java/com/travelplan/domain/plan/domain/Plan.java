@@ -1,13 +1,14 @@
 package com.travelplan.domain.plan.domain;
 
 import com.travelplan.domain.travel.domain.Travel;
+import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
 import lombok.Getter;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
-public class Plan {
+public class Plan extends BaseDateAndCreatorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

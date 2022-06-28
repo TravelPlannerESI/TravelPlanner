@@ -1,12 +1,12 @@
 package com.travelplan.domain.menu.repository.custom.menu;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelplan.domain.menu.entity.Menu;
+import com.travelplan.domain.menu.domain.Menu;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 
-import static com.travelplan.domain.menu.entity.QMenu.*;
+import static com.travelplan.domain.menu.domain.QMenu.*;
 
 @Repository
 public class MenuRepositoryImpl implements MenuRepositoryCustom {

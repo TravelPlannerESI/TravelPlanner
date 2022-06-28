@@ -2,6 +2,7 @@ package com.travelplan.domain.travel.domain;
 
 import com.travelplan.domain.country.domain.Country;
 import com.travelplan.domain.travel.dto.TravelFormDto;
+import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,10 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
-public class Travel {
+public class Travel extends BaseDateAndCreatorEntity {
 
     public Travel(TravelFormDto travelFormDto) {
         this.travelName = travelFormDto.getTravelName();
-        this.lastModifiedDate = travelFormDto.getLastModifiedDate();
-        this.lastModifiedName = travelFormDto.getLastModifiedName();
         this.startDate = travelFormDto.getStartDate();
         this.endDate = travelFormDto.getEndDate();
         this.createUserId = travelFormDto.getCreateUserId();
@@ -34,10 +33,6 @@ public class Travel {
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @Column(name = "last_modified_date")
-    private LocalDateTime lastModifiedDate;
-    @Column(name = "last_modified_name")
-    private String lastModifiedName;
     @Column(name = "start_date")
     private LocalDateTime startDate;
     @Column(name = "end_date")

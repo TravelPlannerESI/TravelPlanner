@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -23,7 +22,7 @@ public class TravelService {
     private final CountryRepository countryRepository;
 
     @Transactional
-    public TravelDto saveTravel(TravelFormDto travelFormDto) {
+    public TravelDto addTravel(TravelFormDto travelFormDto) {
         String inviteCode = UUID.randomUUID().toString();
 
         // 국가코드 추가 후 국가코드로 가져오는 로직으로 변경이 필요하다.

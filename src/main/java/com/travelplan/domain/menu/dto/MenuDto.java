@@ -1,6 +1,6 @@
 package com.travelplan.domain.menu.dto;
 
-import com.travelplan.domain.menu.entity.Menu;
+import com.travelplan.domain.menu.domain.Menu;
 import lombok.Getter;
 
 import java.util.ArrayList;

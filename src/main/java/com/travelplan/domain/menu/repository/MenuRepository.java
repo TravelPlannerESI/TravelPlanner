@@ -1,6 +1,6 @@
 package com.travelplan.domain.menu.repository;
 
-import com.travelplan.domain.menu.entity.Menu;
+import com.travelplan.domain.menu.domain.Menu;
 import com.travelplan.domain.menu.repository.custom.menu.MenuRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 
