@@ -1,9 +1,9 @@
-package com.travelplan.domain.menu.entity;
+package com.travelplan.domain.menu.domain;
 
+import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.BatchSize;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Menu {
+public class Menu extends BaseDateAndCreatorEntity {
 
     public Menu(String menuName, Integer lft, Integer rgt, Integer depth) {
         this.menuName = menuName;

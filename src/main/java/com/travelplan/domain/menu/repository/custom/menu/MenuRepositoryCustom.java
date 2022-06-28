@@ -1,8 +1,6 @@
-package com.travelplan.domain.travel.repository.custom.menu;
+package com.travelplan.domain.menu.repository.custom.menu;
 
-import com.travelplan.domain.menu.entity.Menu;
-
-import java.util.List;
+import com.travelplan.domain.menu.domain.Menu;
 
 public interface MenuRepositoryCustom {
     void updateMenu(Menu subMeun, Integer id);

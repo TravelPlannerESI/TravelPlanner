@@ -1,8 +1,8 @@
 package com.travelplan.travel.domain;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.travelplan.domain.menu.entity.Menu;
-import com.travelplan.domain.travel.repository.MenuRepository;
+import com.travelplan.domain.menu.domain.Menu;
+import com.travelplan.domain.menu.repository.MenuRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -32,35 +32,35 @@ class MenuTest {
     void init() {
         query = new JPAQueryFactory(em);
 
-        //root메뉴 생성
+        // root메뉴 생성
         Menu depth1_1 = new Menu("전체조회", 1, 2, 1);
         Menu depth1_2 = new Menu("관리", 1, 2, 1);
 
-        //root 메뉴 추가
+        // root 메뉴 추가
         em.persist(depth1_1);
         em.persist(depth1_2);
 
-        //2번째 계층
+        // 2번째 계층
         Menu depth2_1 = new Menu(depth1_1, "날짜별 조회");
         Menu depth2_2 = new Menu(depth1_1, "금액조회");
         Menu depth2_3 = new Menu(depth1_2, "인증관리");
         Menu depth2_4 = new Menu(depth1_2, "날짜관리");
 
-        //해당 루트 메뉴들에 2depth 추가한다.
+        // 해당 루트 메뉴들에 2depth 추가한다.
         em.persist(depth2_1);
         em.persist(depth2_2);
         em.persist(depth2_3);
         em.persist(depth2_4);
 
-        //3번째 계층
+        // 3번째 계층
         Menu depth3_1 = new Menu(depth2_3, "차단된 멤버");
         Menu depth3_2 = new Menu(depth2_3, "승인된 멤버");
 
         em.persist(depth3_1);
         em.persist(depth3_2);
 
-        //3depth 부터 아래의 menuUpdate 메서드가 필수적으로 일어나야한다 ( 1depth -> 독립적 , 2depth -> 바로 위의 1depth 의존적 )
-        //벌크성 업데이트 -> 영속성 컨텍스트와 싱크가 안맞게된다 clear 필수.
+        // 3depth 부터 아래의 menuUpdate 메서드가 필수적으로 일어나야한다 ( 1depth -> 독립적 , 2depth -> 바로 위의 1depth 의존적 )
+        // 벌크성 업데이트 -> 영속성 컨텍스트와 싱크가 안맞게된다 clear 필수.
         menuRepository.updateMenu(depth3_1, depth2_3.getId());
         menuRepository.updateMenu(depth3_2, depth2_3.getId());
 

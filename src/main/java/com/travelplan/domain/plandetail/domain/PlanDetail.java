@@ -1,6 +1,7 @@
 package com.travelplan.domain.plandetail.domain;
 
 import com.travelplan.domain.plan.domain.Plan;
+import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
 import com.travelplan.global.entity.code.Vehicle;
 import lombok.Getter;
 
@@ -9,7 +10,7 @@ import java.time.LocalTime;
 
 @Entity
 @Getter
-public class PlanDetail {
+public class PlanDetail extends BaseDateAndCreatorEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
