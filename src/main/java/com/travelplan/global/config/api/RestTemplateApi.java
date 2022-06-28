@@ -1,10 +1,7 @@
 package com.travelplan.global.config.api;
 
 import com.travelplan.global.config.api.constant.RestTemplateConst;
-import com.travelplan.global.config.api.dto.CountryFormDto;
-import com.travelplan.global.config.api.dto.PcrDto;
-import com.travelplan.global.config.api.dto.TravelMakerDto;
-import com.travelplan.global.config.api.dto.WarningDto;
+import com.travelplan.global.config.api.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -34,7 +31,7 @@ public class RestTemplateApi {
 
         WarningDto warningDto = callApi(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
         PcrDto pcrDto = callApi(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
-        TravelMakerDto travelMakerDto = callApi(URL, HttpMethod.POST, request, TravelMakerDto.class);
+        CoordinateDto travelMakerDto = callApi(URL, HttpMethod.POST, request, CoordinateDto.class);
 
 
         log.info("warning size = {}", warningDto.getData().size());
@@ -43,8 +40,8 @@ public class RestTemplateApi {
 
         countryFormList = CountryFormDto.of(warningDto, pcrDto);
         log.info("combine1 size = {}", countryFormList.size());
-        countryFormList = CountryFormDto.of2(warningDto, pcrDto, travelMakerDto);
-        log.info("combine2 size = {}", countryFormList.size());
+        List<CountryWithCoordinateFormDto> countryWithFormList = CountryWithCoordinateFormDto.of(warningDto, pcrDto, travelMakerDto);
+        log.info("combineWithCoordinate size = {}", countryWithFormList.size());
     }
 
     /**
