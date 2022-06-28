@@ -4,9 +4,7 @@ import com.travelplan.domain.covid.domain.Covid;
 import com.travelplan.domain.covid.repository.CovidRepository;
 import com.travelplan.domain.covid.util.CovidApiTemplate;
 import com.travelplan.global.config.api.constant.RestTemplateConst;
-import com.travelplan.global.config.api.dto.CountryFormDto;
-import com.travelplan.global.config.api.dto.PcrDto;
-import com.travelplan.global.config.api.dto.WarningDto;
+import com.travelplan.global.config.api.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
@@ -58,6 +56,10 @@ public class RestTemplateApi {
                 covidRepository.saveAll(convertCovidEntity(countryFormList));
             }
         }.proceed();
+
+        CoordinateDto travelMakerDto = callApi(RestTemplateConst.COORDINATE_API, HttpMethod.POST, request, CoordinateDto.class);
+        log.info("travelMaker size = {}", travelMakerDto.getResult().size());
+//        log.info("combineWithCoordinate size = {}", CountryWithCoordinateFormDto.of(warningDto, pcrDto, travelMakerDto).size());
     }
 
     /**
