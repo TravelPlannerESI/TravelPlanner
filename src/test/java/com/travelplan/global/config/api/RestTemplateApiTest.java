@@ -1,7 +1,10 @@
 package com.travelplan.global.config.api;
 
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -218,10 +221,4 @@ class RestTemplateApiTest {
         return pcrDto;
     }
 
-    @Test
-    void test() {
-        ArrayList<String> a = new ArrayList(Arrays.asList("A", "B", "C", "D", "E"));
-
-//        String a1 =  a;
-    }
 }
