@@ -22,8 +22,6 @@ public class RestTemplateApi {
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static List<CountryFormDto> countryFormList = null;
 
-    private static final String URL = "https://www.travelmakerkorea.com/api/newsList";
-
     @PostConstruct
     public void init() {
         // 요청 생성
@@ -31,7 +29,7 @@ public class RestTemplateApi {
 
         WarningDto warningDto = callApi(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
         PcrDto pcrDto = callApi(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
-        CoordinateDto travelMakerDto = callApi(URL, HttpMethod.POST, request, CoordinateDto.class);
+        CoordinateDto travelMakerDto = callApi(RestTemplateConst.COORDINATE_API, HttpMethod.POST, request, CoordinateDto.class);
 
 
         log.info("warning size = {}", warningDto.getData().size());
@@ -40,8 +38,8 @@ public class RestTemplateApi {
 
         countryFormList = CountryFormDto.of(warningDto, pcrDto);
         log.info("combine1 size = {}", countryFormList.size());
-        List<CountryWithCoordinateFormDto> countryWithFormList = CountryWithCoordinateFormDto.of(warningDto, pcrDto, travelMakerDto);
-        log.info("combineWithCoordinate size = {}", countryWithFormList.size());
+
+        log.info("combineWithCoordinate size = {}", CountryWithCoordinateFormDto.of(warningDto, pcrDto, travelMakerDto).size());
     }
 
     /**

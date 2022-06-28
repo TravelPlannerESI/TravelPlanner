@@ -25,5 +25,6 @@ public interface RestTemplateConst {
     // 최종 API URL
     String WARNING_API = BASE_DIR + WARNING_API_URL + PARAMS;
     String PCR_API = BASE_DIR + PCR_API_URL + PARAMS;
+    String COORDINATE_API = "https://www.travelmakerkorea.com/api/newsList";
 
 }
