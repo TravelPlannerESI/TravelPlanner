@@ -1,5 +1,6 @@
 package com.travelplan.global.config.api.dto;
 
+import com.travelplan.domain.covid.domain.Covid;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -12,32 +13,58 @@ import static java.util.stream.Collectors.*;
 @Getter
 @ToString
 public class CountryFormDto {
-    private String country_iso_alp2;    // ISO 2자리 코드
-    private String country_nm;          // 한글 국가 명
-    private String country_eng_nm;      // 영문 국가 명
+    private String countryIsoAlp2;    // ISO 2자리 코드
+    private String countryNm;          // 한글 국가 명
+    private String countryEngNm;      // 영문 국가 명
     private String title;               // 제목
-    private String txt_origin_cn;       // 글 내용
-    private Integer alarm_lvl;          // 경보 레벨
-    private String written_dt;          // 작성일(경보)
-    private String wrt_dt;              // 작성일(PCR)
+    private String txtOriginCn;       // 글 내용
+    private Integer alarmLvl;          // 경보 레벨
+    private String writtenDt;          // 작성일(경보)
+    private String wrtDt;              // 작성일(PCR)
+
+//    private String country_iso_alp2;    // ISO 2자리 코드
+//    private String country_nm;          // 한글 국가 명
+//    private String country_eng_nm;      // 영문 국가 명
+//    private String title;               // 제목
+//    private String txt_origin_cn;       // 글 내용
+//    private Integer alarm_lvl;          // 경보 레벨
+//    private String written_dt;          // 작성일(경보)
+//    private String wrt_dt;              // 작성일(PCR)
 
     private CountryFormDto(WarningContentData warningDto, PcrContentData pcrDto) {
-        country_iso_alp2 = warningDto.getCountry_iso_alp2();
-        country_nm = warningDto.getCountry_nm();
-        country_eng_nm = warningDto.getCountry_eng_nm();
+        countryIsoAlp2 = warningDto.getCountry_iso_alp2();
+        countryNm = warningDto.getCountry_nm();
+        countryEngNm = warningDto.getCountry_eng_nm();
         title = pcrDto.getTitle();
-        txt_origin_cn = pcrDto.getTxt_origin_cn();
-        alarm_lvl = warningDto.getAlarm_lvl();
-        written_dt = warningDto.getWritten_dt();
-        wrt_dt = pcrDto.getWrt_dt();
+        txtOriginCn = pcrDto.getTxt_origin_cn();
+        alarmLvl = warningDto.getAlarm_lvl();
+        writtenDt = warningDto.getWritten_dt();
+        wrtDt = pcrDto.getWrt_dt();
     }
 
     private CountryFormDto(WarningContentData warningDto) {
-        country_iso_alp2 = warningDto.getCountry_iso_alp2();
-        country_nm = warningDto.getCountry_nm();
-        country_eng_nm = warningDto.getCountry_eng_nm();
-        alarm_lvl = warningDto.getAlarm_lvl();
-        written_dt = warningDto.getWritten_dt();
+        countryIsoAlp2 = warningDto.getCountry_iso_alp2();
+        countryNm = warningDto.getCountry_nm();
+        countryEngNm = warningDto.getCountry_eng_nm();
+        alarmLvl = warningDto.getAlarm_lvl();
+        writtenDt = warningDto.getWritten_dt();
+    }
+
+    public CountryFormDto(Covid covid) {
+        countryIsoAlp2 = covid.getCountryIsoAlp2();
+        countryNm = covid.getCountryNm();
+        countryEngNm = covid.getCountryEngNm();
+        title = covid.getTitle();
+        txtOriginCn = covid.getTxtOriginCn();
+        alarmLvl = covid.getAlarmLvl();
+
+        if (covid.getWrittenDt() != null) {
+            writtenDt = covid.getWrittenDt().toString();
+        }
+
+        if(covid.getWrtDt() != null) {
+            wrtDt = covid.getWrtDt().toString();
+        }
     }
 
     public static List<CountryFormDto> of(WarningDto warningDto, PcrDto pcrDto) {
