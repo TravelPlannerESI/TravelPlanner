@@ -57,8 +57,7 @@ public class RestTemplateApi {
             }
         }.proceed();
 
-        CoordinateDto travelMakerDto = callApi(RestTemplateConst.COORDINATE_API, HttpMethod.POST, request, CoordinateDto.class);
-        log.info("travelMaker size = {}", travelMakerDto.getResult().size());
+//        CoordinateDto travelMakerDto = callApi(RestTemplateConst.COORDINATE_API, HttpMethod.POST, request, CoordinateDto.class);
 //        log.info("combineWithCoordinate size = {}", CountryWithCoordinateFormDto.of(warningDto, pcrDto, travelMakerDto).size());
     }
 

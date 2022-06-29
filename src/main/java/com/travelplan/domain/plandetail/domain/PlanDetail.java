@@ -24,10 +24,10 @@ public class PlanDetail extends BaseDateAndCreatorEntity {
     private String cost;
     private String memo;
 
-    @Column(name = "position_x")
-    private Integer positionX;
-    @Column(name = "position_y")
-    private Integer positionY;
+    @Column(name = "lat")
+    private String lat;
+    @Column(name = "lng")
+    private String lng;
 
     @Enumerated(EnumType.STRING)
     private Vehicle vehicle;
