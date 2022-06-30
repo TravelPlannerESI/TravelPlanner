@@ -1,5 +1,8 @@
-package com.travelplan.global.config.auth;
+package com.travelplan.global.config.auth.oauth2.config;
 
+import com.travelplan.global.config.auth.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.travelplan.global.config.auth.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.travelplan.global.config.auth.oauth2.service.CustomOAuth2UserService;
 import com.travelplan.global.entity.code.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -14,8 +17,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
-//Spring Security 설정들을 활성화 시켜준다.
-//WebSecurityConfigurerAdapter 2.7버전부터 막힘.
+// Spring Security 설정들을 활성화 시켜준다.
+// WebSecurityConfigurerAdapter 2.7버전부터 막힘.
 @EnableWebSecurity
 @RequiredArgsConstructor
 @Configuration(proxyBeanMethods = false)
@@ -24,6 +27,8 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 public class SecurityConfig {
 
     private final CustomOAuth2UserService customOAuth2UserService;
+    private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+    private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
@@ -48,8 +53,8 @@ public class SecurityConfig {
                 .oauth2Login()
                 .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()
-                .successHandler((req, resp, auth) -> resp.sendRedirect("/"));
-
+                .successHandler(oAuth2AuthenticationSuccessHandler)
+                .failureHandler(oAuth2AuthenticationFailureHandler);
         return http.build();
     }
 
