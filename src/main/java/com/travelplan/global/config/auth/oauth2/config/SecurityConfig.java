@@ -1,5 +1,7 @@
 package com.travelplan.global.config.auth.oauth2.config;
 
+import com.travelplan.global.config.auth.oauth2.exception.CustomAuthenticationEntryPoint;
+import com.travelplan.global.config.auth.oauth2.handler.CustomAccessDeniedHandler;
 import com.travelplan.global.config.auth.oauth2.handler.OAuth2AuthenticationFailureHandler;
 import com.travelplan.global.config.auth.oauth2.handler.OAuth2AuthenticationSuccessHandler;
 import com.travelplan.global.config.auth.oauth2.service.CustomOAuth2UserService;
@@ -11,11 +13,9 @@ import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 
 // Spring Security 설정들을 활성화 시켜준다.
 // WebSecurityConfigurerAdapter 2.7버전부터 막힘.
@@ -29,6 +29,7 @@ public class SecurityConfig {
     private final CustomOAuth2UserService customOAuth2UserService;
     private final OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
     private final OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+    private final CustomAccessDeniedHandler accessDeniedHandler;
 
     @Bean
     @Order(SecurityProperties.BASIC_AUTH_ORDER)
@@ -40,6 +41,7 @@ public class SecurityConfig {
                 .antMatchers("/", "/css/**", "/images/**",
                         "/js/**", "/h2-console/**", "/login**").permitAll()
                 .antMatchers("/api/v1/**").hasRole(UserRole.USER.name())
+                .antMatchers("/admin/**").hasRole(UserRole.ADMIN.name())
                 //위에서 설정된값 이외에 나머지 요청들 설정 현재 설정은 인증된 사용자만 가능하게 변경했다.
                 .anyRequest().authenticated()
                 .and()
@@ -47,14 +49,16 @@ public class SecurityConfig {
                 .logoutSuccessUrl("/").permitAll()
                 .and()
                 //권한이 없다면 ? -> 401내려준다.
-                .exceptionHandling(e -> e
-                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-                )
+                .exceptionHandling()
+                .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
+                .accessDeniedHandler(accessDeniedHandler)
+                .and()
                 .oauth2Login()
                 .userInfoEndpoint().userService(customOAuth2UserService)
                 .and()
                 .successHandler(oAuth2AuthenticationSuccessHandler)
                 .failureHandler(oAuth2AuthenticationFailureHandler);
+
         return http.build();
     }
 
