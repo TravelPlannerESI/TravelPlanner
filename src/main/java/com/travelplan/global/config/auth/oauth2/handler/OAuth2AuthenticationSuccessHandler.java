@@ -1,5 +1,6 @@
 package com.travelplan.global.config.auth.oauth2.handler;
 
+import com.travelplan.global.config.auth.oauth2.config.properties.GlobalProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
@@ -18,7 +19,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String targetUrl = "http://localhost:8000?success=true";
+        String targetUrl = GlobalProperties.LOGIN_SUCCESS_URL;
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
