@@ -1,7 +1,7 @@
-package com.travelplan.global.config.auth;
+package com.travelplan.global.config.auth.oauth2.service;
 
-import com.travelplan.global.config.auth.dto.OAuthAttributes;
-import com.travelplan.global.config.auth.dto.SessionUser;
+import com.travelplan.global.config.auth.oauth2.attribute.OAuthAttributes;
+import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

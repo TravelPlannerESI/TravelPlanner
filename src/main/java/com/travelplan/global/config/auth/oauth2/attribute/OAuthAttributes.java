@@ -1,4 +1,4 @@
-package com.travelplan.global.config.auth.dto;
+package com.travelplan.global.config.auth.oauth2.attribute;
 
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.global.entity.code.UserRole;
@@ -8,11 +8,14 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 
-import static com.travelplan.global.config.auth.AttributeCodes.*;
+import static com.travelplan.global.config.auth.oauth2.attribute.AttributeCodes.*;
 
 @Slf4j
 @Getter
 public class OAuthAttributes {
+
+    private static String KAKAO_ACCOUNT = "kakao_account";
+    private static String KAKAO_PROFILE = "profile";
 
     private Map<String, Object> attributes;
     private String nameAttributeKey;
@@ -38,15 +41,14 @@ public class OAuthAttributes {
             return ofNaver("id",attributes);
         }
         if ("kakao".equals(registrationId)) {
-            log.info("userNameAttributeName = {} " , userNameAttributeName);
             return ofKakao("id", attributes);
         }
         return ofGoogle(userNameAttributeName,attributes);
     }
 
     private static OAuthAttributes ofKakao(String userNameAttributeName, Map<String, Object> attributes) {
-        Map<String,Object> kakaoAccount = (Map<String, Object>) attributes.get("kakao_account");
-        Map<String, Object> kakaoProfile = (Map<String, Object>)kakaoAccount.get("profile");
+        Map<String,Object> kakaoAccount = (Map<String, Object>) attributes.get(KAKAO_ACCOUNT);
+        Map<String, Object> kakaoProfile = (Map<String, Object>)kakaoAccount.get(KAKAO_PROFILE);
         return OAuthAttributes.builder()
                 .name((String) kakaoProfile.get(KAKAO.getName()))
                 .email((String) kakaoAccount.get(KAKAO.getEmail()))

@@ -1,4 +1,4 @@
-package com.travelplan.global.config.auth;
+package com.travelplan.global.config.auth.oauth2.attribute;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
