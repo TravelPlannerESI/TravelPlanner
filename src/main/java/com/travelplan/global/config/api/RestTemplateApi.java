@@ -15,7 +15,6 @@ import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -27,8 +26,6 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
 
     private final CovidRepository covidRepository;
     private final CovidWebService covidWebService;
-
-    private final ApplicationEventPublisher publisher;
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static List<CountryFormDto> countryFormList = null;
