@@ -22,13 +22,13 @@ public class Covid implements Persistable<String> {
     @Id
     private String countryIsoAlp2;    // ISO 2자리 코드
 
-    private String countryNm;          // 한글 국가 명
+    private String countryNm;         // 한글 국가 명
     private String countryEngNm;      // 영문 국가 명
-    private String title;               // 제목
+    private String title;             // 제목
     private String txtOriginCn;       // 글 내용
-    private Integer alarmLvl;          // 경보 레벨
-    private LocalDate writtenDt;       // 작성일(경보)
-    private LocalDate wrtDt;           // 작성일(PCR)
+    private Integer alarmLvl;         // 경보 레벨
+    private LocalDate writtenDt;      // 작성일(경보)
+    private LocalDate wrtDt;          // 작성일(PCR)
 
     @CreatedDate
     @Column(name = "created_date",updatable = false)
@@ -46,6 +46,14 @@ public class Covid implements Persistable<String> {
     @Override
     public boolean isNew() {
         return createdDate == null;
+    }
+
+    public void update(Covid covid) {
+        this.title = covid.getTitle();
+        this.txtOriginCn = covid.getTxtOriginCn();
+        this.alarmLvl = covid.getAlarmLvl();
+        this.writtenDt = covid.getWrittenDt();
+        this.wrtDt = covid.getWrtDt();
     }
 
     public Covid(CountryFormDto countryFormDto) {

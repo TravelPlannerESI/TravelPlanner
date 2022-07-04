@@ -3,6 +3,7 @@ package com.travelplan.global.config.api;
 import com.travelplan.domain.covid.domain.Covid;
 import com.travelplan.domain.covid.repository.CovidRepository;
 import com.travelplan.domain.covid.util.CovidApiTemplate;
+import com.travelplan.domain.covid.web.service.CovidWebService;
 import com.travelplan.global.config.api.constant.RestTemplateConst;
 import com.travelplan.global.config.api.dto.*;
 import lombok.RequiredArgsConstructor;
@@ -23,15 +24,26 @@ public class RestTemplateApi {
 
     private static final RestTemplate restTemplate = new RestTemplate();
     private final CovidRepository covidRepository;
+    private final CovidWebService covidWebService;
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static List<CountryFormDto> countryFormList = null;
     public static LocalDate lastUpdateDate = null;
 
+    private static boolean INSERT = true;
+    private static boolean UPDATE = false;
+
     @PostConstruct
     public void init() {
 
-        // 해당 날짜기준으로 삽입한 데이터가 있는지 확인
+        // 데이터가 존재하는지 확인
+        if (covidRepository.countTotalBy() == 0) {
+            // 없다면 신규(최초) 추가
+            mergeCovidData(INSERT);
+            return;
+        }
+
+        // 당일 기준으로 삽입한 데이터가 있는지 확인
         if (hasCurrentInsertData()) {
             lastUpdateDate = LocalDate.now();
             // 존재한다면 해당 데이터 불러와 countryFormList에 대입
@@ -42,7 +54,18 @@ public class RestTemplateApi {
             return;
         }
 
-        // 해당 날짜의 삽입된 데이터가 없다면
+        // 해당 날짜의 삽입된 데이터가 없다면 (업데이트)
+        mergeCovidData(UPDATE);
+
+//        CoordinateDto travelMakerDto = callApi(RestTemplateConst.COORDINATE_API, HttpMethod.POST, request, CoordinateDto.class);
+//        log.info("combineWithCoordinate size = {}", CountryWithCoordinateFormDto.of(warningDto, pcrDto, travelMakerDto).size());
+    }
+
+    /**
+     * covid 정보를 insert/update 하는 메서드
+     * @param isInsert true : insert, false : update
+     */
+    private void mergeCovidData(boolean isInsert) {
         // 요청 생성
         HttpEntity request = getJsonRequest();
 
@@ -53,12 +76,15 @@ public class RestTemplateApi {
                 PcrDto pcrDto = callApi(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
 
                 countryFormList = CountryFormDto.of(warningDto, pcrDto);
-                covidRepository.saveAll(convertCovidEntity(countryFormList));
+
+                if (isInsert) {
+                    covidRepository.saveAll(convertCovidEntityList(countryFormList));
+                } else {
+                    covidWebService.updateAll(convertCovidEntityMap(countryFormList));
+                }
+
             }
         }.proceed();
-
-//        CoordinateDto travelMakerDto = callApi(RestTemplateConst.COORDINATE_API, HttpMethod.POST, request, CoordinateDto.class);
-//        log.info("combineWithCoordinate size = {}", CountryWithCoordinateFormDto.of(warningDto, pcrDto, travelMakerDto).size());
     }
 
     /**
@@ -85,13 +111,22 @@ public class RestTemplateApi {
         return LocalDate.now().isEqual(other);
     }
 
-    private List<Covid> convertCovidEntity(List<CountryFormDto> countryFormList) {
+    private List<Covid> convertCovidEntityList(List<CountryFormDto> countryFormList) {
         List<Covid> covidList = new ArrayList<>();
         for (CountryFormDto dto : countryFormList) {
             covidList.add(new Covid(dto));
         }
 
         return covidList;
+    }
+
+    private Map<String, Covid> convertCovidEntityMap(List<CountryFormDto> countryFormList) {
+        Map<String, Covid> covidMap = new HashMap<>();
+        for (CountryFormDto dto : countryFormList) {
+            covidMap.put(dto.getCountryIsoAlp2(), new Covid(dto));
+        }
+
+        return covidMap;
     }
 
     /**
