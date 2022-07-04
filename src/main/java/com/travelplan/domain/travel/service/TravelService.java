@@ -2,6 +2,7 @@ package com.travelplan.domain.travel.service;
 
 import com.travelplan.domain.country.domain.Country;
 import com.travelplan.domain.country.repository.CountryRepository;
+import com.travelplan.domain.plan.service.PlanService;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.domain.travel.dto.TravelFormDto;
@@ -20,6 +21,7 @@ public class TravelService {
 
     private final TravelRepository travelRepository;
     private final CountryRepository countryRepository;
+    private final PlanService planService;
 
     @Transactional
     public TravelDto addTravel(TravelFormDto travelFormDto) {
@@ -36,6 +38,9 @@ public class TravelService {
         travelRepository.save(travel);
         TravelDto travelDto = new TravelDto(travelFormDto);
         travelDto.setInviteCode(inviteCode);
+
+        // 날짜 별 plan 추가
+        planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
 
         return travelDto;
     }

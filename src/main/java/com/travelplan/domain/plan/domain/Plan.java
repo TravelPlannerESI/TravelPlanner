@@ -2,12 +2,21 @@ package com.travelplan.domain.plan.domain;
 
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
+import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 
+import java.time.LocalDateTime;
+
+import static lombok.AccessLevel.PROTECTED;
+
 @Entity
 @Getter
+@NoArgsConstructor(access = PROTECTED)
+@ToString(of = {"days", "currentDay"})
 public class Plan extends BaseDateAndCreatorEntity {
 
     @Id
@@ -23,5 +32,11 @@ public class Plan extends BaseDateAndCreatorEntity {
 
     private Integer days;
 
+    private LocalDateTime currentDay;
 
+    public Plan(Travel travel, Integer days, LocalDateTime currentDay) {
+        this.travel = travel;
+        this.days = days;
+        this.currentDay = currentDay;
+    }
 }
