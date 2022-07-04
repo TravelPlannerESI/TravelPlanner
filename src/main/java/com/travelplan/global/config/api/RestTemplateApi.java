@@ -8,6 +8,9 @@ import com.travelplan.global.config.api.constant.RestTemplateConst;
 import com.travelplan.global.config.api.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -20,11 +23,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Component
-public class RestTemplateApi {
+public class RestTemplateApi implements ApplicationListener<ContextRefreshedEvent> {
 
-    private static final RestTemplate restTemplate = new RestTemplate();
     private final CovidRepository covidRepository;
     private final CovidWebService covidWebService;
+
+    private final ApplicationEventPublisher publisher;
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static List<CountryFormDto> countryFormList = null;
@@ -33,9 +37,11 @@ public class RestTemplateApi {
     private static boolean INSERT = true;
     private static boolean UPDATE = false;
 
-    @PostConstruct
-    public void init() {
-
+    /**
+     *  Spring 컨텍스트의 초기화가 완료된 후 실행
+     */
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
         // 데이터가 존재하는지 확인
         if (covidRepository.countTotalBy() == 0) {
             // 없다면 신규(최초) 추가
@@ -159,6 +165,8 @@ public class RestTemplateApi {
                           Class<T> dtoClass,
                           String... params) {
 
+        RestTemplate restTemplate = new RestTemplate();
+
         T contents = restTemplate.exchange(
                 url,
                 httpMethod,
@@ -174,4 +182,5 @@ public class RestTemplateApi {
         return new String[]{RestTemplateConst.SERVICE_KEY_VALUE, RestTemplateConst.RETURN_TYPE_VALUE,
                 RestTemplateConst.NUM_OF_ROWS_VALUE, RestTemplateConst.PAGE_NO_VALUE};
     }
+
 }
