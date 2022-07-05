@@ -2,10 +2,7 @@ package com.travelplan.domain.user.domain;
 
 import com.travelplan.global.entity.base.BaseDateEntity;
 import com.travelplan.global.entity.code.UserRole;
-import lombok.AccessLevel;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -13,6 +10,7 @@ import javax.persistence.*;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "USERS")
+@ToString(exclude = "email")
 public class User extends BaseDateEntity {
 
     @Id

@@ -50,15 +50,15 @@ class PlanServiceTest {
     public static void setTravelFormDto() {
         travelFormDto = new TravelFormDto();
         travelFormDto.setTravelName("오사카 먹방여행");
-        travelFormDto.setStartDate(NOW);
-        travelFormDto.setLastModifiedDate(NOW);
-        travelFormDto.setLastModifiedName(EMAIL);
-        travelFormDto.setEndDate(END_DATE);
-        travelFormDto.setCreateUserId(EMAIL);
+//        travelFormDto.setStartDate(NOW);
+//        travelFormDto.setLastModifiedDate(NOW);
+//        travelFormDto.setLastModifiedName(EMAIL);
+//        travelFormDto.setEndDate(END_DATE);
+//        travelFormDto.setCreateUserId(EMAIL);
         CountryDto countryDto = new CountryDto();
         countryDto.setCountryId(1);
         countryDto.setCountryName("일본");
-        travelFormDto.setCountryDto(countryDto);
+//        travelFormDto.setCountryDto(countryDto);
     }
 
     @Test
@@ -74,7 +74,7 @@ class PlanServiceTest {
         em.persist(travel);
         em.flush();
 
-        planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
+//        planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
         em.clear();
 
         List<Plan> result = planRepository.findByTravel(travel);

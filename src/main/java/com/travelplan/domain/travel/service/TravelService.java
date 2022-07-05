@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -27,9 +29,9 @@ public class TravelService {
     public TravelDto addTravel(TravelFormDto travelFormDto) {
         String inviteCode = UUID.randomUUID().toString();
 
-        // 국가코드 추가 후 국가코드로 가져오는 로직으로 변경이 필요하다.
-        Country country = countryRepository.findByCountryId(travelFormDto.getCountryDto().getCountryId())
+        Country country = countryRepository.findByCountryIsoAlp2(travelFormDto.getCountryIsoAlp2())
                 .orElseThrow(NoSuchElementException::new);
+
         Travel travel = new Travel(travelFormDto);
         travel.addCountry(country);
         travel.saveInviteCode(inviteCode);
@@ -40,7 +42,7 @@ public class TravelService {
         travelDto.setInviteCode(inviteCode);
 
         // 날짜 별 plan 추가
-        planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
+        planService.addPlan(travel, LocalDateTime.of(travel.getStartDate(), LocalTime.now()), LocalDateTime.of(travel.getStartDate(), LocalTime.now()));
 
         return travelDto;
     }

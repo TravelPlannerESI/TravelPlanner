@@ -9,5 +9,6 @@ public class CountryDto {
 
     private Integer countryId;
     private String countryName;
+    private String countryIsoAlp2;
 
 }
