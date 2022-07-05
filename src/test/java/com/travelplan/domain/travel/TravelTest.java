@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -39,21 +40,21 @@ class TravelTest {
 
     public static final String EMAIL = "ats3059@naver.com";
     public static final String INVITE_CODE = UUID.randomUUID().toString();
-    public static final LocalDateTime NOW = LocalDateTime.now();
-    public static final LocalDateTime END_DATE = NOW.plusDays(5);
+    public static final LocalDate NOW = LocalDate.now();
+    public static final LocalDate END_DATE = NOW.plusDays(5);
 
     static {
         travelFormDto = new TravelFormDto();
         travelFormDto.setTravelName("오사카 먹방여행");
         travelFormDto.setStartDate(NOW);
-        travelFormDto.setLastModifiedDate(NOW);
-        travelFormDto.setLastModifiedName(EMAIL);
+//        travelFormDto.setLastModifiedDate(NOW);
+//        travelFormDto.setLastModifiedName(EMAIL);
         travelFormDto.setEndDate(END_DATE);
-        travelFormDto.setCreateUserId(EMAIL);
+//        travelFormDto.setCreateUserId(EMAIL);
         CountryDto countryDto = new CountryDto();
         countryDto.setCountryId(1);
         countryDto.setCountryName("일본");
-        travelFormDto.setCountryDto(countryDto);
+//        travelFormDto.setCountryDto(countryDto);
     }
 
     @PersistenceContext
@@ -82,7 +83,7 @@ class TravelTest {
         em.flush();
         em.clear();
 
-        List<Travel> result = travelRepository.findByCreateUserId("ats3059@naver.com");
+        List<Travel> result = travelRepository.findByCreatedBy("ats3059@naver.com");
 
         Country validCountry = em.createQuery("select c from Country c where c.countryName = :name", Country.class)
                 .setParameter("name", "일본")
@@ -92,7 +93,7 @@ class TravelTest {
             if ("오사카 먹방여행".equals(in.getTravelName())) {
                 Assertions.assertThat(in.getCountry()).isEqualTo(validCountry);
                 Assertions.assertThat(in.getInviteCode()).isEqualTo(INVITE_CODE);
-                Assertions.assertThat(in.getCreateUserId()).isEqualTo(EMAIL);
+//                Assertions.assertThat(in.getCreateUserId()).isEqualTo(EMAIL);
             }
         }
     }

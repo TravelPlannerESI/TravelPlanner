@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -19,7 +20,6 @@ public class Travel extends BaseDateAndCreatorEntity {
         this.travelName = travelFormDto.getTravelName();
         this.startDate = travelFormDto.getStartDate();
         this.endDate = travelFormDto.getEndDate();
-        this.createUserId = travelFormDto.getCreateUserId();
     }
 
     @Id
@@ -34,11 +34,9 @@ public class Travel extends BaseDateAndCreatorEntity {
     private Country country;
 
     @Column(name = "start_date")
-    private LocalDateTime startDate;
+    private LocalDate startDate;
     @Column(name = "end_date")
-    private LocalDateTime endDate;
-    @Column(name = "create_user_id")
-    private String createUserId;
+    private LocalDate endDate;
 
     @Column(name = "invite_code")
     private String inviteCode;

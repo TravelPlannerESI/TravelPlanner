@@ -27,9 +27,9 @@ public class TravelService {
     public TravelDto addTravel(TravelFormDto travelFormDto) {
         String inviteCode = UUID.randomUUID().toString();
 
-        // 국가코드 추가 후 국가코드로 가져오는 로직으로 변경이 필요하다.
-        Country country = countryRepository.findByCountryId(travelFormDto.getCountryDto().getCountryId())
+        Country country = countryRepository.findByCountryIsoAlp2(travelFormDto.getCountryIsoAlp2())
                 .orElseThrow(NoSuchElementException::new);
+
         Travel travel = new Travel(travelFormDto);
         travel.addCountry(country);
         travel.saveInviteCode(inviteCode);
