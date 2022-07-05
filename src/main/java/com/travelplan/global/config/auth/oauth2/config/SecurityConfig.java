@@ -39,7 +39,7 @@ public class SecurityConfig {
                 //URL별 권한 관리를 설정하는 옵션의 시작점이다.
                 .authorizeRequests()
                 .antMatchers("/", "/css/**", "/images/**",
-                        "/js/**", "/h2-console/**", "/login**").permitAll()
+                        "/js/**", "/h2-console/**", "/login**", "/api/v1/country").permitAll()
                 .antMatchers("/api/v1/**").hasRole(UserRole.USER.name())
                 .antMatchers("/admin/**").hasRole(UserRole.ADMIN.name())
                 //위에서 설정된값 이외에 나머지 요청들 설정 현재 설정은 인증된 사용자만 가능하게 변경했다.
