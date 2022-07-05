@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
@@ -40,7 +42,7 @@ public class TravelService {
         travelDto.setInviteCode(inviteCode);
 
         // 날짜 별 plan 추가
-        planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
+        planService.addPlan(travel, LocalDateTime.of(travel.getStartDate(), LocalTime.now()), LocalDateTime.of(travel.getStartDate(), LocalTime.now()));
 
         return travelDto;
     }
