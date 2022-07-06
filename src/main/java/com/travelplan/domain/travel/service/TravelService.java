@@ -29,7 +29,7 @@ public class TravelService {
     public TravelDto addTravel(TravelFormDto travelFormDto) {
         String inviteCode = UUID.randomUUID().toString();
 
-        Country country = countryRepository.findByCountryIsoAlp2(travelFormDto.getCountryIsoAlp2())
+        Country country = countryRepository.findByCovid(travelFormDto.getCountryIsoAlp2())
                 .orElseThrow(NoSuchElementException::new);
 
         Travel travel = new Travel(travelFormDto);
