@@ -6,6 +6,8 @@ import com.travelplan.domain.country.web.dto.CountryDto;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelFormDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
+import com.travelplan.domain.user.domain.User;
+import com.travelplan.domain.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -64,6 +66,8 @@ class TravelTest {
     private MockMvc mvc;
 
     @Autowired
+    UserRepository userRepository;
+    @Autowired
     TravelRepository travelRepository;
 
     @Autowired
@@ -112,6 +116,5 @@ class TravelTest {
 
 
     }
-
 
 }

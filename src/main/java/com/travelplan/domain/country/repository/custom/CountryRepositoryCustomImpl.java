@@ -9,8 +9,9 @@ import org.springframework.stereotype.Repository;
 import javax.persistence.EntityManager;
 import java.util.List;
 
-import static com.travelplan.domain.country.domain.QCountry.*;
-import static com.travelplan.domain.covid.domain.QCovid.*;
+import static com.travelplan.domain.country.domain.QCountry.country;
+import static com.travelplan.domain.covid.domain.QCovid.covid;
+
 
 @Slf4j
 @Repository

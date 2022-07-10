@@ -2,7 +2,6 @@ package com.travelplan.domain.plan.domain;
 
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -38,6 +37,6 @@ public class Plan extends BaseDateAndCreatorEntity {
     public Plan(Travel travel, Integer days, LocalDate currentDay) {
         this.travel = travel;
         this.days = days;
-        this.currentDay = currentDay;
+        this.currentDay = LocalDate.now();
     }
 }
