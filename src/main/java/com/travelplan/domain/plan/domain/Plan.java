@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static lombok.AccessLevel.PROTECTED;
@@ -32,9 +33,9 @@ public class Plan extends BaseDateAndCreatorEntity {
 
     private Integer days;
 
-    private LocalDateTime currentDay;
+    private LocalDate currentDay;
 
-    public Plan(Travel travel, Integer days, LocalDateTime currentDay) {
+    public Plan(Travel travel, Integer days, LocalDate currentDay) {
         this.travel = travel;
         this.days = days;
         this.currentDay = currentDay;
