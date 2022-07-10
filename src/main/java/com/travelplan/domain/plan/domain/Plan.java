@@ -34,7 +34,7 @@ public class Plan extends BaseDateAndCreatorEntity {
 
     private LocalDate currentDay;
 
-    public Plan(Travel travel, Integer days, LocalDateTime currentDay) {
+    public Plan(Travel travel, Integer days, LocalDate currentDay) {
         this.travel = travel;
         this.days = days;
         this.currentDay = LocalDate.now();
