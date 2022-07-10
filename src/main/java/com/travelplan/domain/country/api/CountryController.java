@@ -15,7 +15,6 @@ import java.util.List;
 @RestController
 public class CountryController {
 
-
     private final CountryService countryService;
 
     @GetMapping("/api/v1/country")
