@@ -1,5 +1,7 @@
 package com.travelplan.global.config.api;
 
+import com.travelplan.domain.country.repository.CountryRepository;
+import com.travelplan.domain.country.repository.dto.CountryCovidInfoForm;
 import com.travelplan.domain.covid.domain.Covid;
 import com.travelplan.domain.covid.repository.CovidRepository;
 import com.travelplan.domain.covid.util.CovidApiTemplate;
@@ -26,9 +28,11 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
 
     private final CovidRepository covidRepository;
     private final CovidWebService covidWebService;
+    private final CountryRepository countryRepository;
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static List<CountryFormDto> countryFormList = null;
+    public static List<CountryCovidInfoForm> countryFormListWithCoordinate = null;
     public static LocalDate lastUpdateDate = null;
 
     private static boolean INSERT = true;
@@ -54,6 +58,7 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
                     .map(CountryFormDto::new)
                     .collect(Collectors.toList());
 
+            countryFormListWithCoordinate = countryRepository.selectCountryInfo();
             return;
         }
 
@@ -72,7 +77,7 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
         // 요청 생성
         HttpEntity request = getJsonRequest();
 
-        new CovidApiTemplate(covidRepository) {
+        new CovidApiTemplate(covidRepository, countryRepository) {
             @Override
             protected void logic() {
                 WarningDto warningDto = callApi(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
@@ -86,6 +91,7 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
                     covidWebService.updateAll(convertCovidEntityMap(countryFormList));
                 }
 
+                countryFormListWithCoordinate = countryRepository.selectCountryInfo();
             }
         }.proceed();
     }
