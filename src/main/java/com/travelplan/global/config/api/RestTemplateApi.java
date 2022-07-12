@@ -79,7 +79,6 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
                 PcrDto pcrDto = callApi(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
 
                 countryFormList = CountryFormDto.of(warningDto, pcrDto);
-
                 if (isInsert) {
                     covidRepository.saveAll(convertCovidEntityList(countryFormList));
                 } else {
