@@ -4,8 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.travelplan.domain.country.domain.Country;
 import com.travelplan.domain.country.web.dto.CountryDto;
 import com.travelplan.domain.travel.domain.Travel;
+import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.domain.travel.dto.TravelFormDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
+import com.travelplan.domain.travel.web.repository.CustomTravelRepository;
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -23,9 +25,12 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -40,7 +45,7 @@ class TravelTest {
 
     public static TravelFormDto travelFormDto;
 
-    public static final String EMAIL = "ats3059@naver.com";
+    public static final String EMAIL = "ats3059@gmail.com";
     public static final String INVITE_CODE = UUID.randomUUID().toString();
     public static final LocalDate NOW = LocalDate.now();
     public static final LocalDate END_DATE = NOW.plusDays(5);
@@ -72,6 +77,9 @@ class TravelTest {
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @Autowired
+    CustomTravelRepository customTravelRepository;
 
     @Test
     public void 여행을_계획하고_저장한다() {
@@ -113,8 +121,6 @@ class TravelTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andDo(print());
-
-
     }
 
 }

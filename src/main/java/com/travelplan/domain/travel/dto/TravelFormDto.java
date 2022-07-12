@@ -6,6 +6,7 @@ import lombok.Setter;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,6 +20,12 @@ public class TravelFormDto {
     private LocalDate startDate;
     @NotNull
     private LocalDate endDate;
+    private List<String> membersEmail;
     private String inviteCode;
+    private Integer totalCost;
 
+
+    public boolean existMembers() {
+        return membersEmail.size() > 0 ? true : false;
+    }
 }
