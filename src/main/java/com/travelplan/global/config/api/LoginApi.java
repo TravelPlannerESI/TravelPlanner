@@ -26,4 +26,12 @@ public class LoginApi {
         return user;
     }
 
+    @PostMapping("/logout")
+    public void logout(HttpServletRequest req) {
+        HttpSession session = req.getSession(false);
+        if (session != null) {
+            session.invalidate();
+        }
+    }
+
 }
