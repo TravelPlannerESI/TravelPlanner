@@ -6,6 +6,7 @@ import com.travelplan.domain.covid.domain.Covid;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.apache.commons.text.StringEscapeUtils;
 
 @Getter
 @Setter
@@ -13,11 +14,11 @@ import lombok.ToString;
 public class CountryCovidInfoForm {
 
     private String countryIsoAlp2;    // ISO 2자리 코드
-    private String countryNm;       // 국가명
+    private String countryNm;         // 국가명
     private String countryEngNm;      // 영문 국가 명
-    private String title;               // 제목
+    private String title;             // 제목
     private String txtOriginCn;       // 글 내용
-    private Integer alarmLvl;          // 경보 레벨
+    private Integer alarmLvl;         // 경보 레벨
     private String lat;               // 위도
     private String lng;               // 경도
 
@@ -28,7 +29,7 @@ public class CountryCovidInfoForm {
         this.countryNm = covid.getCountryNm();
         this.countryEngNm = covid.getCountryEngNm();
         this.title = covid.getTitle();
-        this.txtOriginCn = covid.getTxtOriginCn();
+        this.txtOriginCn = StringEscapeUtils.unescapeHtml4(covid.getTxtOriginCn());
         this.alarmLvl = covid.getAlarmLvl();
         this.lat = country.getLat();
         this.lng = country.getLng();
