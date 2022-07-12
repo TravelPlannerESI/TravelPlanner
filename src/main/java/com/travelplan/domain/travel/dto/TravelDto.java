@@ -1,5 +1,7 @@
 package com.travelplan.domain.travel.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
+import com.travelplan.domain.travel.domain.Travel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +18,20 @@ public class TravelDto {
         this.startDate = travelFormDto.getStartDate();
         this.endDate = travelFormDto.getEndDate();
         this.inviteCode = travelFormDto.getInviteCode();
+    }
+
+    public TravelDto(Travel travel) {
+        this.travelName = travel.getTravelName();
+        this.startDate = travel.getStartDate();
+        this.endDate = travel.getEndDate();
+        this.inviteCode = travel.getInviteCode();
+    }
+    @QueryProjection
+    public TravelDto(String travelName, LocalDate startDate, LocalDate endDate) {
+        this.travelName = travelName;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.inviteCode = "";
     }
 
     private String travelName;

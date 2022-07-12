@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,6 +19,7 @@ public class Travel extends BaseDateAndCreatorEntity {
         this.travelName = travelFormDto.getTravelName();
         this.startDate = travelFormDto.getStartDate();
         this.endDate = travelFormDto.getEndDate();
+        this.totalCost = travelFormDto.getTotalCost();
     }
 
     @Id
@@ -40,6 +40,8 @@ public class Travel extends BaseDateAndCreatorEntity {
 
     @Column(name = "invite_code")
     private String inviteCode;
+
+    private Integer totalCost;
 
 //    @OneToMany(mappedBy = "travel")
 //    private List<Plan> plans = new ArrayList<>();
