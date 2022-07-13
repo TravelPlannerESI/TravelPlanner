@@ -13,6 +13,7 @@ import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
 import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.global.entity.code.JoinStatus;
+import com.travelplan.global.entity.code.MemberRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,7 +34,7 @@ public class TravelService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public TravelDto addTravel(TravelFormDto travelFormDto, SessionUser sessionUser) {
+    public TravelDto addTravel(TravelFormDto travelFormDto, String email) {
         String inviteCode = UUID.randomUUID().toString();
 
         Country country = countryRepository.findByCountryName(travelFormDto.getCountryIsoAlp2())
@@ -47,7 +48,7 @@ public class TravelService {
         travelRepository.save(travel);
 
         // 멤버생성
-        makeMembers(travelFormDto, travel,sessionUser);
+        makeMembers(travelFormDto, travel,email);
 
         TravelDto travelDto = new TravelDto(travelFormDto);
         travelDto.setInviteCode(inviteCode);
@@ -58,10 +59,12 @@ public class TravelService {
         return travelDto;
     }
 
-    private void makeMembers(TravelFormDto travelFormDto, Travel travel, SessionUser sessionUser) {
-        travelFormDto.getMembersEmail().add(sessionUser.getEmail());
+    private void makeMembers(TravelFormDto travelFormDto, Travel travel, String email) {
+        travelFormDto.getMembersEmail().add(email);
         List<User> users = userRepository.findByEmailIn(travelFormDto.getMembersEmail());
-        users.forEach(user -> memberRepository.save(new Member(travel, user, JoinStatus.YES,null)));
+        users.forEach(user -> {
+            if(email.equals(user.getEmail())) memberRepository.save(new Member(travel, user, JoinStatus.YES, MemberRole.ADMIN));
+            else memberRepository.save(new Member(travel, user, JoinStatus.NO, MemberRole.GUEST));
+        });
     }
-
 }

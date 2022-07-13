@@ -3,6 +3,8 @@ package com.travelplan.domain.travel.web.repository;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelplan.domain.travel.dto.QTravelDto;
 import com.travelplan.domain.travel.dto.TravelDto;
+import com.travelplan.global.entity.code.JoinStatus;
+import com.travelplan.global.entity.code.MemberRole;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,8 +31,9 @@ public class CustomTravelRepository {
         return query.select(
                         new QTravelDto(travel.travelName, travel.startDate, travel.endDate)
                 ).from(member)
-                .join(member.user, user).on(user.email.eq(email))
+                .join(member.user, user)
                 .join(member.travel, travel)
+                .where(member.joinStatus.eq(JoinStatus.YES).and(user.email.eq(email)))
                 .orderBy(travel.startDate.desc()).fetch();
     }
 
