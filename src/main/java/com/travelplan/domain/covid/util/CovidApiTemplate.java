@@ -1,5 +1,6 @@
 package com.travelplan.domain.covid.util;
 
+import com.travelplan.domain.country.repository.CountryRepository;
 import com.travelplan.domain.covid.repository.CovidRepository;
 import com.travelplan.global.config.api.RestTemplateApi;
 import com.travelplan.global.config.api.dto.CountryFormDto;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 public abstract class CovidApiTemplate {
 
     private final CovidRepository covidRepository;
+    private final CountryRepository countryRepository;
 
     public void proceed() {
         try {
@@ -24,6 +26,7 @@ public abstract class CovidApiTemplate {
             RestTemplateApi.countryFormList = covidRepository.findAllByOrderByCountryNmAsc().stream()
                     .map(CountryFormDto::new)
                     .collect(Collectors.toList());
+            RestTemplateApi.countryFormListWithCoordinate = countryRepository.selectCountryInfo();
         }
     }
 
