@@ -26,13 +26,12 @@ public class TravelApi {
 
     @PostMapping("/api/v1/travel")
     public TravelDto travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
-        TravelDto travelDto = travelService.addTravel(travelFormDto,sessionUser);
+        TravelDto travelDto = travelService.addTravel(travelFormDto,sessionUser.getEmail());
         return travelDto;
     }
 
     @GetMapping("/api/v1/travel")
     public List<TravelDto> travelList(@OauthUser SessionUser sessionUser) {
-        log.info(sessionUser.getEmail());
         if(sessionUser!=null) return customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail());
         throw new RuntimeException("권한이 없습니다.");
     }
