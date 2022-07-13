@@ -64,7 +64,7 @@ public class TravelService {
         List<User> users = userRepository.findByEmailIn(travelFormDto.getMembersEmail());
         users.forEach(user -> {
             if(email.equals(user.getEmail())) memberRepository.save(new Member(travel, user, JoinStatus.YES, MemberRole.ADMIN));
-            else memberRepository.save(new Member(travel, user, JoinStatus.NO, MemberRole.GUEST));
+            else memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST));
         });
     }
 }
