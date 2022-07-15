@@ -35,7 +35,7 @@ class CountryRepositoryCustomImplTest {
 
     @Test
     public void test() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/api/v1/map"))
+        mvc.perform(MockMvcRequestBuilders.get("/api/v1/country"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(MockMvcResultHandlers.print());
     }

@@ -2,13 +2,16 @@ package com.travelplan.global.config.api.dto;
 
 import com.travelplan.domain.covid.domain.Covid;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.stream.Collectors.*;
+import static org.springframework.util.StringUtils.hasText;
 
 @Getter
 @ToString
@@ -21,15 +24,6 @@ public class CountryFormDto {
     private Integer alarmLvl;          // 경보 레벨
     private String writtenDt;          // 작성일(경보)
     private String wrtDt;              // 작성일(PCR)
-
-//    private String country_iso_alp2;    // ISO 2자리 코드
-//    private String country_nm;          // 한글 국가 명
-//    private String country_eng_nm;      // 영문 국가 명
-//    private String title;               // 제목
-//    private String txt_origin_cn;       // 글 내용
-//    private Integer alarm_lvl;          // 경보 레벨
-//    private String written_dt;          // 작성일(경보)
-//    private String wrt_dt;              // 작성일(PCR)
 
     private CountryFormDto(WarningContentData warningDto, PcrContentData pcrDto) {
         countryIsoAlp2 = warningDto.getCountry_iso_alp2();
@@ -118,4 +112,25 @@ public class CountryFormDto {
                 .collect(toMap(PcrContentData::getCountry_iso_alp2, o -> o));
     }
 
+    public void decodeTxtOriginCn() {
+        if (hasText(txtOriginCn)) {
+            txtOriginCn = enEscapeHTML(txtOriginCn);
+        }
+    }
+
+    private static String enEscapeHTML(String s) {
+//        StringBuilder out = new StringBuilder(Math.max(16, s.length()));
+//        for (int i = 0; i < s.length(); i++) {
+//            char c = s.charAt(i);
+//            if (c > 127 || c == '"' || c == '\'' || c == '<' || c == '>' || c == '&') {
+//                out.append("&#");
+//                out.append((int) c);
+//                out.append(';');
+//            } else {
+//                out.append(c);
+//            }
+//        }
+
+        return s.replaceAll("&nbsp", " ");
+    }
 }

@@ -1,7 +1,7 @@
 package com.travelplan.domain.country.api;
 
 import com.travelplan.domain.country.repository.dto.CountryCovidInfoForm;
-import com.travelplan.domain.country.service.CountryService;
+import com.travelplan.global.config.api.RestTemplateApi;
 import com.travelplan.global.utils.responsedto.ResponseData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -15,11 +15,10 @@ import java.util.List;
 @RestController
 public class CountryController {
 
-    private final CountryService countryService;
 
     @GetMapping("/api/v1/country")
     public ResponseData<List<CountryCovidInfoForm>> countryList() {
-        List<CountryCovidInfoForm> list = countryService.findAllCountryInfo();
+        List<CountryCovidInfoForm> list = RestTemplateApi.countryFormListWithCoordinate;
 
         return new ResponseData<>(list, "A1", "성공");
     }
