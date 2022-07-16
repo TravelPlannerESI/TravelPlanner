@@ -27,13 +27,15 @@ public class TravelDto {
         this.inviteCode = travel.getInviteCode();
     }
     @QueryProjection
-    public TravelDto(String travelName, LocalDate startDate, LocalDate endDate) {
+    public TravelDto(String travelName, LocalDate startDate, LocalDate endDate,Integer travelId) {
         this.travelName = travelName;
         this.startDate = startDate;
         this.endDate = endDate;
         this.inviteCode = "";
+        this.travelId = travelId;
     }
 
+    private Integer travelId;
     private String travelName;
     private LocalDate startDate;
     private LocalDate endDate;
