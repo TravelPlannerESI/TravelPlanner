@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,6 +46,14 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse<CustomErrorResult>> httpMessageNotReadableException(HttpMessageNotReadableException e) {
+
+        ErrorResponse<CustomErrorResult> response = makeErrorResult("올바른 정보를 입력해주세요.", ErrorConstant.TEMP);
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(TempException.class)
     public ResponseEntity<ErrorResponse<CustomErrorResult>> tempException(TempException e) {

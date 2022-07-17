@@ -8,6 +8,7 @@ import com.travelplan.domain.plan.service.PlanService;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.domain.travel.dto.TravelFormDto;
+import com.travelplan.domain.travel.dto.TravelJoinResultDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
@@ -15,13 +16,16 @@ import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.global.entity.code.JoinStatus;
 import com.travelplan.global.entity.code.MemberRole;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -57,6 +61,32 @@ public class TravelService {
         planService.addPlan(travel, travel.getStartDate(), travel.getStartDate());
 
         return travelDto;
+    }
+
+    @Transactional
+    public void updateJoinStatus(String inviteCode, String requestType, String email, TravelJoinResultDto joinResult) {
+        log.info("inviteCode = {}", inviteCode);
+        log.info("email = {}", email);
+
+        // travel_id 조회
+        Travel travel = travelRepository.findByInviteCode(inviteCode);
+
+        // member_id 조회
+        Integer memberId = memberRepository.findMemberId(travel, email);
+        Member findMember = memberRepository.findById(memberId)
+                            .orElseThrow(NoSuchElementException::new);
+
+        // 여행 팀장이 거절한 인원에게 초대 요청을 재전송 했을 때
+        if ("resend".equals(requestType)) {
+            log.info("resend = {}", requestType);
+            findMember.setJoinStatus(JoinStatus.EMPTY);
+        }
+
+        // member가 초대를 수락 / 거절 했을 때
+        if ("response".equals(requestType)) {
+            log.info("response = {}", requestType);
+            findMember.setJoinStatus(joinResult.getJoinStatus());
+        }
     }
 
     private void makeMembers(TravelFormDto travelFormDto, Travel travel, String email) {

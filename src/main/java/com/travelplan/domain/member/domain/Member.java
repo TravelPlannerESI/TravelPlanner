@@ -41,4 +41,10 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
 
+
+    /* 비즈니스 로직 */
+
+    public void setJoinStatus(JoinStatus joinStatus) {
+        this.joinStatus = joinStatus;
+    }
 }
