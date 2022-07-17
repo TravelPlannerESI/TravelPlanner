@@ -48,9 +48,9 @@ public class GlobalControllerAdvice {
 
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ErrorResponse<CustomErrorResult>> httpMessageNotReadableException(HttpMessageNotReadableException e) {
+    public ResponseEntity<ErrorResponse<String>> httpMessageNotReadableException(HttpMessageNotReadableException e) {
 
-        ErrorResponse<CustomErrorResult> response = makeErrorResult("올바른 정보를 입력해주세요.", ErrorConstant.TEMP);
+        ErrorResponse<String> response = CreateError.errorResult("올바른 정보를 입력해주세요.");
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }

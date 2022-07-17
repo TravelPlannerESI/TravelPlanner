@@ -50,11 +50,11 @@ public class TravelApi {
 //    public void responseInvitation(@PathVariable("inviteCode") String inviteCode, @OauthUser SessionUser sessionUser) {
 //        travelService.updateJoinStatus(inviteCode, sessionUser.getEmail());
     @PutMapping("/api/v1/travel/{inviteCode}/response")
-    public ResponseEntity<?> responseInvitation(@PathVariable("inviteCode") String inviteCode,
+    public ResponseEntity<Void> responseInvitation(@PathVariable("inviteCode") String inviteCode,
                                              String email, @RequestBody TravelJoinResultDto joinResult) {
         travelService.updateJoinStatus(inviteCode, "response", email, joinResult);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
@@ -65,10 +65,10 @@ public class TravelApi {
      * @return
      */
     @PutMapping("/api/v1/travel/{inviteCode}/resend")
-    public ResponseEntity<?> resendInvitation(@PathVariable("inviteCode") String inviteCode, @RequestBody TravelJoinResultDto joinResult) {
+    public ResponseEntity<Void> resendInvitation(@PathVariable("inviteCode") String inviteCode, @RequestBody TravelJoinResultDto joinResult) {
         travelService.updateJoinStatus(inviteCode, "resend", joinResult.getEmail(), joinResult);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 
