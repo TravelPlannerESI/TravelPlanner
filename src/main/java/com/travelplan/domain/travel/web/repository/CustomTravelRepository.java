@@ -29,7 +29,7 @@ public class CustomTravelRepository {
 
     public List<TravelDto> findByTravelInMemberOrderByDesc(String email) {
         return query.select(
-                        new QTravelDto(travel.travelName, travel.startDate, travel.endDate)
+                        new QTravelDto(travel.travelName, travel.startDate, travel.endDate,travel.travelId)
                 ).from(member)
                 .join(member.user, user)
                 .join(member.travel, travel)
