@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -45,6 +46,20 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
+
+    /**
+     * HTTP body의 JSON데이터를 객체로 변환하는 과정에서
+     * field가 맞지 않거나, enum type과 맞지 않을 때 발생하는 Exception
+     *
+     * @return ResponseEntity<ErrorResponse<String>>
+     */
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponse<String>> httpMessageNotReadableException(HttpMessageNotReadableException e) {
+
+        ErrorResponse<String> response = CreateError.errorResult("올바른 정보를 입력해주세요.");
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(TempException.class)
     public ResponseEntity<ErrorResponse<String>> tempException(TempException e) {
