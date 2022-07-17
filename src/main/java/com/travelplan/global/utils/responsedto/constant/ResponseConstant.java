@@ -8,9 +8,9 @@ import lombok.RequiredArgsConstructor;
 public enum ResponseConstant {
 
     SEARCH("SEARCH", "성공"),
-    ADD("ADD", "저장 성공"),
-    UPDATE("UPDATE", "수정 성공"),
-    DELETE("DELETE", "삭제 성공");
+    ADD("ADD", "저장되었습니다."),
+    UPDATE("UPDATE", "수정되었습니다."),
+    DELETE("DELETE", "삭제되었습니다.");
 
 
     private final String successCode;
