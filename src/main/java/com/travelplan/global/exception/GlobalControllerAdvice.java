@@ -47,6 +47,12 @@ public class GlobalControllerAdvice {
     }
 
 
+    /**
+     * HTTP body의 JSON데이터를 객체로 변환하는 과정에서
+     * field가 맞지 않거나, enum type과 맞지 않을 때 발생하는 Exception
+     *
+     * @return ResponseEntity<ErrorResponse<String>>
+     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorResponse<String>> httpMessageNotReadableException(HttpMessageNotReadableException e) {
 
