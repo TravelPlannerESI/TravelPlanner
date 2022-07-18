@@ -4,6 +4,7 @@ import com.travelplan.domain.country.domain.Country;
 import com.travelplan.domain.country.repository.CountryRepository;
 import com.travelplan.domain.member.domain.Member;
 import com.travelplan.domain.member.repository.MemberRepository;
+import com.travelplan.domain.member.web.repository.MemberRepositoryCustom;
 import com.travelplan.domain.plan.service.PlanService;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelDto;
@@ -35,6 +36,7 @@ public class TravelService {
     private final PlanService planService;
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
+    private final MemberRepositoryCustom memberRepositoryCustom;
 
     @Transactional
     public TravelDto addTravel(TravelFormDto travelFormDto, String email) {
@@ -71,7 +73,7 @@ public class TravelService {
         Travel travel = travelRepository.findByInviteCode(inviteCode);
 
         // member_id 조회
-        Integer memberId = memberRepository.findMemberId(travel, joinResult.getEmail());
+        Integer memberId = memberRepositoryCustom.findMemberId(travel, joinResult.getEmail());
         Member findMember = memberRepository.findById(memberId)
                 .orElseThrow(() -> new IdNotFoundException("해당 사용자가 '" + travel.getTravelName() + "' 여행일정에 존재하지 않습니다."));
 
