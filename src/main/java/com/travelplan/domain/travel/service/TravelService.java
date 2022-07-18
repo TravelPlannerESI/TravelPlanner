@@ -56,7 +56,7 @@ public class TravelService {
         travelDto.setInviteCode(inviteCode);
 
         // 날짜 별 plan 추가
-        planService.addPlan(travel, travel.getStartDate(), travel.getStartDate());
+        planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
 
         return travelDto;
     }
