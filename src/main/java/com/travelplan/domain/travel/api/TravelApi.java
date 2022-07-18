@@ -7,6 +7,8 @@ import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.global.config.webconfig.annotation.OauthUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,9 +33,8 @@ public class TravelApi {
     }
 
     @GetMapping("/api/v1/travel")
-    public List<TravelDto> travelList(@OauthUser SessionUser sessionUser) {
-        if(sessionUser!=null) return customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail());
-        throw new RuntimeException("권한이 없습니다.");
+    public Page<TravelDto> travelList(@OauthUser SessionUser sessionUser , Pageable pageable) {
+        return customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail(),pageable);
     }
 
     private boolean isLogin(String email, HttpServletRequest request) {
