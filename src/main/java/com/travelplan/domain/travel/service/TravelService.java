@@ -8,13 +8,14 @@ import com.travelplan.domain.plan.service.PlanService;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.domain.travel.dto.TravelFormDto;
+import com.travelplan.domain.travel.dto.TravelJoinResultDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
-import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.global.entity.code.JoinStatus;
 import com.travelplan.global.entity.code.MemberRole;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +23,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 
+@Slf4j
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -48,7 +50,7 @@ public class TravelService {
         travelRepository.save(travel);
 
         // 멤버생성
-        makeMembers(travelFormDto, travel,email);
+        makeMembers(travelFormDto, travel, email);
 
         TravelDto travelDto = new TravelDto(travelFormDto);
         travelDto.setInviteCode(inviteCode);
@@ -59,11 +61,28 @@ public class TravelService {
         return travelDto;
     }
 
+    @Transactional
+    public void updateJoinStatus(String inviteCode, TravelJoinResultDto joinResult) {
+        log.info("inviteCode = {}", inviteCode);
+        log.info("email = {}", joinResult.getEmail());
+
+        // travel_id 조회
+        Travel travel = travelRepository.findByInviteCode(inviteCode);
+
+        // member_id 조회
+        Integer memberId = memberRepository.findMemberId(travel, joinResult.getEmail());
+        Member findMember = memberRepository.findById(memberId)
+                .orElseThrow(NoSuchElementException::new);
+
+        findMember.setJoinStatus(joinResult.getJoinStatus());
+    }
+
     private void makeMembers(TravelFormDto travelFormDto, Travel travel, String email) {
         travelFormDto.getMembersEmail().add(email);
         List<User> users = userRepository.findByEmailIn(travelFormDto.getMembersEmail());
         users.forEach(user -> {
-            if(email.equals(user.getEmail())) memberRepository.save(new Member(travel, user, JoinStatus.YES, MemberRole.ADMIN));
+            if (email.equals(user.getEmail()))
+                memberRepository.save(new Member(travel, user, JoinStatus.YES, MemberRole.ADMIN));
             else memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST));
         });
     }
