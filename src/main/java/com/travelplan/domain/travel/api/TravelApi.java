@@ -31,14 +31,17 @@ public class TravelApi {
 
 
     @PostMapping("/api/v1/travel")
-    public TravelDto travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
+    public ResponseEntity<ResponseData> travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
         TravelDto travelDto = travelService.addTravel(travelFormDto,sessionUser.getEmail());
-        return travelDto;
+        ResponseData<TravelDto> resData = new ResponseData<>(travelDto,ADD.getSuccessCode(), ADD.getSuccessMessage());
+        return ResponseEntity.ok(resData);
     }
 
     @GetMapping("/api/v1/travel")
-    public Page<TravelDto> travelList(@OauthUser SessionUser sessionUser , Pageable pageable) {
-        return customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail(),pageable);
+    public ResponseEntity<ResponseData> travelList(@OauthUser SessionUser sessionUser , Pageable pageable) {
+        Page<TravelDto> pageResult = customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail(), pageable);
+        ResponseData<Page<TravelDto>> resData = new ResponseData<>(pageResult,SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
+        return ResponseEntity.ok(resData);
     }
 
     /**
