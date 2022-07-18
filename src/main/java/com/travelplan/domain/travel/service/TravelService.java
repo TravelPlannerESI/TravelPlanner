@@ -14,6 +14,7 @@ import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
 import com.travelplan.global.entity.code.JoinStatus;
 import com.travelplan.global.entity.code.MemberRole;
+import com.travelplan.global.exception.customexception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class TravelService {
         travelDto.setInviteCode(inviteCode);
 
         // 날짜 별 plan 추가
-        planService.addPlan(travel, travel.getStartDate(), travel.getStartDate());
+        planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
 
         return travelDto;
     }
@@ -72,7 +73,7 @@ public class TravelService {
         // member_id 조회
         Integer memberId = memberRepository.findMemberId(travel, joinResult.getEmail());
         Member findMember = memberRepository.findById(memberId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new IdNotFoundException("해당 사용자가 '" + travel.getTravelName() + "' 여행일정에 존재하지 않습니다."));
 
         findMember.setJoinStatus(joinResult.getJoinStatus());
     }

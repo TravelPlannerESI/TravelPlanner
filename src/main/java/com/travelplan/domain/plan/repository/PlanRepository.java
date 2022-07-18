@@ -12,5 +12,7 @@ public interface PlanRepository extends JpaRepository<Plan, Long> {
 
     List<Plan> findByTravel(Travel travel);
 
+    List<Plan> findByTravel(int travelId);
+
 
 }

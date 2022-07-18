@@ -1,6 +1,7 @@
 package com.travelplan.global.exception;
 
 import com.travelplan.global.exception.constant.ErrorConstant;
+import com.travelplan.global.exception.customexception.IdNotFoundException;
 import com.travelplan.global.exception.dto.CustomErrorResult;
 import com.travelplan.global.exception.dto.CustomFieldError;
 import com.travelplan.global.exception.dto.ErrorResponse;
@@ -60,6 +61,16 @@ public class GlobalControllerAdvice {
 
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
+
+
+
+    @ExceptionHandler(IdNotFoundException.class)
+    public ResponseEntity<ErrorResponse<String>> idNotFoundException(IdNotFoundException e) {
+        ErrorResponse<String> response = CreateError.errorResult(e.getMessage());
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
 
     @ExceptionHandler(TempException.class)
     public ResponseEntity<ErrorResponse<String>> tempException(TempException e) {
