@@ -1,13 +1,22 @@
 package com.travelplan.travel.domain;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelplan.domain.menu.domain.Menu;
 import com.travelplan.domain.menu.repository.MenuRepository;
+import com.travelplan.domain.travel.api.TravelApi;
+import com.travelplan.domain.travel.dto.TravelDto;
+import com.travelplan.domain.user.domain.User;
+import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
@@ -93,6 +102,4 @@ class MenuTest {
         });
         assertThat(root.getRgt()).isEqualTo(8);
     }
-
-
 }

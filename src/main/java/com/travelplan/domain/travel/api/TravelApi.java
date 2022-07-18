@@ -8,6 +8,8 @@ import com.travelplan.global.entity.code.JoinStatus;
 import com.travelplan.global.utils.responsedto.ResponseData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,7 +18,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.List;
 
 import static com.travelplan.global.utils.responsedto.constant.ResponseConstant.*;
 
@@ -30,15 +31,17 @@ public class TravelApi {
 
 
     @PostMapping("/api/v1/travel")
-    public TravelDto travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
+    public ResponseEntity<ResponseData> travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
         TravelDto travelDto = travelService.addTravel(travelFormDto,sessionUser.getEmail());
-        return travelDto;
+        ResponseData<TravelDto> resData = new ResponseData<>(travelDto,ADD.getSuccessCode(), ADD.getSuccessMessage());
+        return ResponseEntity.ok(resData);
     }
 
     @GetMapping("/api/v1/travel")
-    public List<TravelDto> travelList(@OauthUser SessionUser sessionUser) {
-        if(sessionUser!=null) return customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail());
-        throw new RuntimeException("권한이 없습니다.");
+    public ResponseEntity<ResponseData> travelList(@OauthUser SessionUser sessionUser , Pageable pageable) {
+        Page<TravelDto> pageResult = customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail(), pageable);
+        ResponseData<Page<TravelDto>> resData = new ResponseData<>(pageResult,SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
+        return ResponseEntity.ok(resData);
     }
 
     /**
@@ -56,7 +59,7 @@ public class TravelApi {
 //        travelService.updateJoinStatus(inviteCode, sessionUser.getEmail());
     @PutMapping("/api/v1/travel/{inviteCode}/response")
     public ResponseEntity<ResponseData> responseInvitation(@PathVariable("inviteCode") String inviteCode,
-                                                            String email, @RequestBody TravelJoinResultResponseDto joinResult) {
+                                                           String email, @RequestBody TravelJoinResultResponseDto joinResult) {
 
         // 현재 로그인한 유저의 email -> sessionUser로 변경 예정
         String loginUserEmail = email;

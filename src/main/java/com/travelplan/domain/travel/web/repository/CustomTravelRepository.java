@@ -1,11 +1,15 @@
 package com.travelplan.domain.travel.web.repository;
 
+import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelplan.domain.travel.dto.QTravelDto;
 import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.global.entity.code.JoinStatus;
 import com.travelplan.global.entity.code.MemberRole;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,14 +31,24 @@ public class CustomTravelRepository {
         query = new JPAQueryFactory(em);
     }
 
-    public List<TravelDto> findByTravelInMemberOrderByDesc(String email) {
-        return query.select(
-                        new QTravelDto(travel.travelName, travel.startDate, travel.endDate,travel.travelId)
+    public Page<TravelDto> findByTravelInMemberOrderByDesc(String email , Pageable pageable) {
+        List<TravelDto> fetchContent = query.select(
+                        new QTravelDto(travel.travelName, travel.startDate, travel.endDate, travel.travelId)
                 ).from(member)
                 .join(member.user, user)
                 .join(member.travel, travel)
                 .where(member.joinStatus.eq(JoinStatus.YES).and(user.email.eq(email)))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
                 .orderBy(travel.startDate.desc()).fetch();
+
+        JPAQuery<Long> count = query.select(member.count())
+                .from(member)
+                .join(member.user, user)
+                .where(user.email.eq(email).and(member.joinStatus.eq(JoinStatus.YES)));
+
+        Page<TravelDto> page = PageableExecutionUtils.getPage(fetchContent, pageable, count::fetchOne);
+        return page;
     }
 
 }
