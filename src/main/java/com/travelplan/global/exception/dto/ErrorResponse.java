@@ -20,6 +20,10 @@ public class ErrorResponse<T> {
     private String errorMsg;
     private T errors;
 
+    public ErrorResponse(String errorMsg) {
+        this.errorMsg = errorMsg;
+    }
+
     public ErrorResponse(String errorMsg, String detailErrorMsg, String aaa, String bbb) {
         this.errorMsg = errorMsg;
         this.errors = (T) new CustomErrorResult(detailErrorMsg, aaa, bbb);
