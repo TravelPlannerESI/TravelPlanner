@@ -1,5 +1,5 @@
 package com.travelplan.global.entity.code;
 
 public enum Vehicle {
-    SUBWAY,CAR
+    WALK, SUBWAY,CAR, TRAM, BUS, TAXI, AIRBUS
 }
