@@ -6,6 +6,7 @@ import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelplan.domain.member.domain.QMember;
 import com.travelplan.domain.travel.domain.QTravel;
+import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.user.domain.QUser;
 import com.travelplan.global.entity.code.JoinStatus;
 import org.springframework.stereotype.Repository;
@@ -41,5 +42,16 @@ public class MemberRepositoryCustom {
                 )
                 .fetchFirst();
         return fetchOne != null;
+    }
+
+
+    @Transactional(readOnly = true)
+    public Integer findMemberId(Travel travel, String email) {
+        return factory
+                .select(member.memberId)
+                .from(member)
+                .join(member.user, user)
+                .where(member.travel.eq(travel).and(user.email.eq(email)))
+                .fetchOne();
     }
 }
