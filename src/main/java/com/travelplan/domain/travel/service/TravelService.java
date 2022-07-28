@@ -21,9 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -81,12 +79,14 @@ public class TravelService {
     }
 
     private void makeMembers(TravelFormDto travelFormDto, Travel travel, String email) {
-        travelFormDto.getMembersEmail().add(email);
-        List<User> users = userRepository.findByEmailIn(travelFormDto.getMembersEmail());
+        List<String> membersEmail = travelFormDto.getMembersEmail();
+        membersEmail.add(email);
+        List<User> users = userRepository.findByEmailIn(membersEmail);
         users.forEach(user -> {
             if (email.equals(user.getEmail()))
                 memberRepository.save(new Member(travel, user, JoinStatus.YES, MemberRole.ADMIN));
             else memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST));
         });
+        membersEmail.remove(membersEmail.size()-1);
     }
 }

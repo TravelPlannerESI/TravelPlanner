@@ -3,7 +3,9 @@ package com.travelplan.domain.travel.web.repository;
 import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.travelplan.domain.travel.dto.QTravelDto;
+import com.travelplan.domain.travel.dto.QTravelInviteDto;
 import com.travelplan.domain.travel.dto.TravelDto;
+import com.travelplan.domain.travel.dto.TravelInviteDto;
 import com.travelplan.global.entity.code.JoinStatus;
 import com.travelplan.global.entity.code.MemberRole;
 import lombok.extern.slf4j.Slf4j;
@@ -49,6 +51,26 @@ public class CustomTravelRepository {
 
         Page<TravelDto> page = PageableExecutionUtils.getPage(fetchContent, pageable, count::fetchOne);
         return page;
+    }
+
+    public List<TravelInviteDto> findByTravelMemberOrderByDesc(String email) {
+        List<Integer> fetchTravelId = query.select(
+                        travel.travelId
+                ).from(member)
+                .join(member.user, user)
+                .join(member.travel, travel)
+                .where(member.joinStatus.eq(JoinStatus.EMPTY).and(user.email.eq(email)))
+                .fetch();
+
+        List<TravelInviteDto> fetchContent = query.select(
+                        new QTravelInviteDto(user.userName, travel.travelName, travel.travelId, user.userPicture)
+                ).from(member)
+                .join(member.user, user)
+                .join(member.travel, travel)
+                .where(travel.travelId.in(fetchTravelId).and(user.email.eq(travel.createdBy)))
+                .orderBy(travel.startDate.desc()).fetch();
+
+        return fetchContent;
     }
 
 }
