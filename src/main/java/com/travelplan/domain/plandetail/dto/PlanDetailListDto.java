@@ -33,6 +33,7 @@ public class PlanDetailListDto {
     public PlanDetailListDto(PlanDetail planDetail) {
         this.planDetailId = planDetail.getPlanDetailId();
         this.planId = planDetail.getPlan().getPlanId();
+        this.destinationName = planDetail.getDestinationName();
         this.cost = planDetail.getCost();
         this.memo = planDetail.getMemo();
         this.vehicle = planDetail.getVehicle();

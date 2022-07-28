@@ -56,4 +56,8 @@ public class PlanDetail extends BaseDateAndCreatorEntity {
         this.arrivalTime = dto.getArrivalTime();
         this.departureTime = dto.getDepartureTime();
     }
+
+    public void changePlan(Plan plan) {
+        this.plan = plan;
+    }
 }
