@@ -17,10 +17,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
 import static com.travelplan.global.utils.responsedto.constant.ResponseConstant.ADD;
 import static com.travelplan.global.utils.responsedto.constant.ResponseConstant.SEARCH;
 
@@ -33,9 +29,9 @@ public class PlanDetailApiController {
     private final PlanDetailRepository planDetailRepository;
     private final PlanRepository planRepository;
 
-    @GetMapping("/planDetail/{travelId}")
-    public ResponseEntity<ResponseData> planDetailList(@PathVariable Integer travelId) {
-        return ResponseEntity.ok(new ResponseData<>(planDetailService.findPlanDetail(travelId), SEARCH.getSuccessCode(), SEARCH.getSuccessMessage()));
+    @GetMapping("/planDetail")
+    public ResponseEntity<ResponseData> planDetailList(@OauthUser SessionUser user) {
+        return ResponseEntity.ok(new ResponseData<>(planDetailService.findPlanDetail(user.getCurrentTravelId()), SEARCH.getSuccessCode(), SEARCH.getSuccessMessage()));
     }
 
     @PostMapping("/planDetail")
