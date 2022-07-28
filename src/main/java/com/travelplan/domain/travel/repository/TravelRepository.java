@@ -10,4 +10,5 @@ public interface TravelRepository extends JpaRepository<Travel,Integer> {
     List<Travel> findByCreatedByOrderByStartDateDesc(String userId);
 
     Travel findByInviteCode(String inviteCode);
+
 }

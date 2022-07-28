@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import java.util.List;
+
 import static com.travelplan.global.utils.responsedto.constant.ResponseConstant.*;
 
 @RestController
@@ -28,11 +30,12 @@ public class TravelApi {
 
     private final TravelService travelService;
     private final CustomTravelRepository customTravelRepository;
-
+    private final TravelMqController travelMqController;
 
     @PostMapping("/api/v1/travel")
     public ResponseEntity<ResponseData> travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
         TravelDto travelDto = travelService.addTravel(travelFormDto,sessionUser.getEmail());
+        travelMqController.send(sessionUser,travelFormDto.getMembersEmail(),travelFormDto.getTravelName(),travelDto.getTravelId());
         ResponseData<TravelDto> resData = new ResponseData<>(travelDto,ADD.getSuccessCode(), ADD.getSuccessMessage());
         return ResponseEntity.ok(resData);
     }
@@ -109,6 +112,13 @@ public class TravelApi {
         else if (JoinStatus.NO.name().equals(code)) msg.append("거절 ").append(successMsg);
 
         return msg.toString();
+    }
+
+    @GetMapping("/api/v1/travel/toast")
+    public ResponseEntity<ResponseData> inviteToast(@OauthUser SessionUser sessionUser) {
+        List<TravelInviteDto> fetchNoInviteTravel = customTravelRepository.findByTravelMemberOrderByDesc(sessionUser.getEmail());
+        ResponseData<List<TravelInviteDto>> resData = new ResponseData<>(fetchNoInviteTravel,SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
+        return ResponseEntity.ok(resData);
     }
 
 }
