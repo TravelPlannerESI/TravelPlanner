@@ -6,6 +6,7 @@ import com.travelplan.domain.plan.repository.PlanRepository;
 import com.travelplan.domain.plandetail.domain.PlanDetail;
 import com.travelplan.domain.plandetail.dto.PlanDetailAddFormDto;
 import com.travelplan.domain.plandetail.dto.PlanDetailListDto;
+import com.travelplan.domain.plandetail.dto.PlanResponseDto;
 import com.travelplan.domain.plandetail.repository.PlanDetailRepository;
 import com.travelplan.domain.plandetail.service.PlanDetailService;
 import com.travelplan.global.config.auth.oauth2.session.SessionUser;
@@ -31,12 +32,13 @@ public class PlanDetailApiController {
 
     @GetMapping("/planDetail")
     public ResponseEntity<ResponseData> planDetailList(@OauthUser SessionUser user) {
-        return ResponseEntity.ok(new ResponseData<>(planDetailService.findPlanDetail(user.getCurrentTravelId()), SEARCH.getSuccessCode(), SEARCH.getSuccessMessage()));
+        PlanResponseDto planDetail = planDetailService.findPlanDetail(user.getCurrentTravelId());
+        return ResponseEntity.ok(new ResponseData<>(planDetail, SEARCH.getSuccessCode(), SEARCH.getSuccessMessage()));
     }
 
     @PostMapping("/planDetail")
     public ResponseEntity<ResponseData> planDetailAdd(@OauthUser SessionUser user, @RequestBody PlanDetailAddFormDto planDetailAddFormDto) {
-        planDetailService.addPlanDetail(planDetailAddFormDto, user.getEmail());
+        planDetailService.addPlanDetail(planDetailAddFormDto, user.getCurrentTravelId(), user.getEmail());
 
         return new ResponseEntity(new ResponseData<>(ADD.getSuccessCode(), ADD.getSuccessMessage()), HttpStatus.CREATED);
     }

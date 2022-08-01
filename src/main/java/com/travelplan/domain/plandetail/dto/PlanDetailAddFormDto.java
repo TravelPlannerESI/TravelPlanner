@@ -15,7 +15,6 @@ import java.time.LocalTime;
 public class PlanDetailAddFormDto {
 
     private Integer planId;
-    private Integer travelId;
 
     @NotBlank
     private String destinationName;

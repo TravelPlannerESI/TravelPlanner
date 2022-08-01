@@ -1,22 +1,16 @@
 package com.travelplan.domain.plan.service;
 
 import com.travelplan.domain.plan.domain.Plan;
-import com.travelplan.domain.plan.dto.PlanDto;
-import com.travelplan.domain.plan.dto.PlanResponseDto;
 import com.travelplan.domain.plan.repository.PlanRepository;
 import com.travelplan.domain.plan.util.PlanDateUtil;
 import com.travelplan.domain.travel.domain.Travel;
-import com.travelplan.domain.travel.repository.TravelRepository;
-import com.travelplan.global.exception.customexception.IdNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,7 +18,6 @@ import java.util.stream.Collectors;
 public class PlanService {
 
     private final PlanRepository planRepository;
-    private final TravelRepository travelRepository;
 
     @Transactional
     public void addPlan(Travel travel, LocalDate startDate, LocalDate endDate) {
@@ -37,21 +30,6 @@ public class PlanService {
             planRepository.save(new Plan(travel, Math.toIntExact(i), betweenDateWithDays.get(Math.toIntExact(i))));
         }
 
-    }
-
-    @Transactional(readOnly = true)
-    public PlanResponseDto findPlans(int travelId) {
-        Travel travel = travelRepository.findById(travelId)
-                .orElseThrow(() -> new IdNotFoundException("해당 여행 정보를 찾지 못했습니다."));
-
-        List<Plan> findPlans = planRepository.findByTravel(travel);
-
-        List<PlanDto> plans = findPlans.stream()
-                .map((plan) -> new PlanDto(plan.getPlanId(), plan.getDays(), plan.getCurrentDay()))
-                .collect(Collectors.toList());
-
-
-        return new PlanResponseDto(travel.getTravelName(), plans);
     }
 
 
