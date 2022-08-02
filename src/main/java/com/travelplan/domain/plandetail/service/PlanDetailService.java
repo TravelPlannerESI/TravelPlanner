@@ -4,8 +4,7 @@ import com.travelplan.domain.member.web.repository.MemberRepositoryCustom;
 import com.travelplan.domain.plan.domain.Plan;
 import com.travelplan.domain.plan.repository.PlanRepository;
 import com.travelplan.domain.plandetail.domain.PlanDetail;
-import com.travelplan.domain.plandetail.dto.PlanDetailAddFormDto;
-import com.travelplan.domain.plandetail.dto.PlanDetailListDto;
+import com.travelplan.domain.plandetail.dto.*;
 import com.travelplan.domain.plandetail.exception.NotExistPlanException;
 import com.travelplan.domain.plandetail.repository.PlanDetailRepository;
 import com.travelplan.domain.plandetail.web.repository.PlanDetailRepositoryCustom;
@@ -31,11 +30,21 @@ public class PlanDetailService {
 
 
     @Transactional
-    public List<PlanDetailListDto> findPlanDetail(Integer travelId) {
-        List<Plan> planList = planRepository.findByTravel(getTravel(travelId));
-        return planDetailRepositoryCustom.findByPlans(planList).stream()
+    public PlanResponseDto findPlanDetail(Integer travelId) {
+        Travel travel = getTravel(travelId);
+        List<Plan> planList = planRepository.findByTravel(travel);
+
+        // plan list 조회
+        List<PlanListDto> plans = planList.stream()
+                .map(PlanListDto::new)
+                .collect(Collectors.toList());
+
+        // plan detail list 조회
+        List<PlanDetailListDto> planDetails = planDetailRepositoryCustom.findByPlans(planList).stream()
                 .map(PlanDetailListDto::new)
                 .collect(Collectors.toList());
+
+        return new PlanResponseDto(travel.getTravelName(), plans, planDetails);
     }
 
     private Travel getTravel(Integer travelId) {
@@ -43,8 +52,8 @@ public class PlanDetailService {
     }
 
     @Transactional
-    public void addPlanDetail(PlanDetailAddFormDto planDetailAddFormDto, String userEmail) {
-        validateExistPlan(planDetailAddFormDto.getTravelId(), userEmail);
+    public void addPlanDetail(PlanDetailAddFormDto planDetailAddFormDto, Integer travelId, String userEmail) {
+        validateExistPlan(travelId, userEmail);
 
         planDetailRepository.save(getPlanDetailToDto(planDetailAddFormDto));
     }

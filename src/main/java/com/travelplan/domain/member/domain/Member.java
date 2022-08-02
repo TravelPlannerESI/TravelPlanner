@@ -46,5 +46,9 @@ public class Member {
 
     public void setJoinStatus(JoinStatus joinStatus) {
         this.joinStatus = joinStatus;
+        if (joinStatus.name().equals("YES"))
+            memberRole = MemberRole.USER;
+        else
+            memberRole = MemberRole.GUEST;
     }
 }
