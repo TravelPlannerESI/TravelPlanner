@@ -47,15 +47,27 @@ public class PlanDetailService {
         return new PlanResponseDto(travel.getTravelName(), plans, planDetails);
     }
 
+    public List<PlanDetailListDto> findPlanDetailDays(Integer planId) {
+        return planDetailRepositoryCustom.finByPlanId(planId).stream()
+                .map(PlanDetailListDto::new)
+                .collect(Collectors.toList());
+    }
+
     private Travel getTravel(Integer travelId) {
         return travelRepository.findById(travelId).orElseThrow(() -> new IllegalStateException("잘못된 요청입니다."));
     }
 
     @Transactional
-    public void addPlanDetail(PlanDetailAddFormDto planDetailAddFormDto, Integer travelId, String userEmail) {
-        validateExistPlan(travelId, userEmail);
+    public void addPlanDetail(PlanDetailAddFormDto planDetailAddFormDto, String userEmail) {
+        validateExistPlan(planDetailAddFormDto.getTravelId(), userEmail);
 
         planDetailRepository.save(getPlanDetailToDto(planDetailAddFormDto));
+    }
+
+    @Transactional
+    public void modifyPlanDetail(PlanDetailModifyFormDto planDetailModifyFormDto, Integer planDetailId) {
+        PlanDetail planDetail = planDetailRepository.findById(planDetailId).orElseThrow(() -> new IllegalStateException("잘못된 요청입니다."));
+        planDetail.updatePlanDetail(planDetailModifyFormDto);
     }
 
     /**
@@ -76,5 +88,6 @@ public class PlanDetailService {
         planDetail.changePlan(plan);
         return planDetail;
     }
+
 
 }
