@@ -30,4 +30,12 @@ public class PlanDetailRepositoryCustom {
                 )
                 .fetch();
     }
+
+    public List<PlanDetail> finByPlanId(Integer planId) {
+        return queryFactory
+                .select(planDetail)
+                .from(planDetail)
+                .where(planDetail.plan.planId.eq(planId))
+                .fetch();
+    }
 }

@@ -12,7 +12,7 @@ import java.time.LocalTime;
 
 @Getter
 @Setter
-public class PlanDetailAddFormDto {
+public class PlanDetailModifyFormDto {
 
     private Integer planId;
     private Integer travelId;
