@@ -72,7 +72,7 @@ public class TravelApi {
         ResponseData<TravelCountryInfoDto> resData = new ResponseData<>(travelCountryInfo, SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
         return ResponseEntity.ok(resData);
     }
-q
+
 
 
 }
