@@ -41,6 +41,7 @@ public class PlanDetailApiController {
 
     @PostMapping("/planDetail")
     public ResponseEntity<ResponseData> planDetailAdd(@OauthUser SessionUser user, @RequestBody PlanDetailAddFormDto planDetailAddFormDto) {
+        planDetailAddFormDto.setTravelId(user.getCurrentTravelId());
         planDetailService.addPlanDetail(planDetailAddFormDto, user.getEmail());
 
         return new ResponseEntity(new ResponseData<>(ADD.getSuccessCode(), ADD.getSuccessMessage()), HttpStatus.CREATED);
