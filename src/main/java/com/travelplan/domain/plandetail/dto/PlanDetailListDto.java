@@ -1,5 +1,6 @@
 package com.travelplan.domain.plandetail.dto;
 
+import com.querydsl.core.annotations.QueryProjection;
 import com.travelplan.domain.plandetail.domain.PlanDetail;
 import com.travelplan.global.entity.code.TravelTheme;
 import com.travelplan.global.entity.code.Vehicle;
@@ -16,7 +17,7 @@ public class PlanDetailListDto {
     private Integer planId;
 
     private String destinationName;
-
+    private Integer days;
     private String cost;
     private String memo;
     private Vehicle vehicle;
@@ -42,6 +43,25 @@ public class PlanDetailListDto {
         this.lng = planDetail.getLng();
         this.departureTime = planDetail.getDepartureTime();
         this.arrivalTime = planDetail.getArrivalTime();
+    }
+
+    @QueryProjection
+    public PlanDetailListDto(Integer planDetailId, Integer planId,
+                             String destinationName, Integer days, String cost,
+                             String memo, Vehicle vehicle, TravelTheme travelTheme, String lat,
+                             String lng, LocalTime departureTime, LocalTime arrivalTime) {
+        this.planDetailId = planDetailId;
+        this.planId = planId;
+        this.destinationName = destinationName;
+        this.days = days;
+        this.cost = cost;
+        this.memo = memo;
+        this.vehicle = vehicle;
+        this.travelTheme = travelTheme;
+        this.lat = lat;
+        this.lng = lng;
+        this.departureTime = departureTime;
+        this.arrivalTime = arrivalTime;
     }
 
 }
