@@ -62,4 +62,17 @@ public class TravelApi {
         ResponseData<List<TravelInviteDto>> resData = new ResponseData<>(fetchNoInviteTravel,SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
         return ResponseEntity.ok(resData);
     }
+
+
+    @GetMapping("/api/v1/travel/dashboard")
+    public ResponseEntity<ResponseData<TravelCountryInfoDto>> dashboard(@OauthUser SessionUser sessionUser) {
+
+        TravelCountryInfoDto travelCountryInfo = customTravelRepository.findTravelCountryInfo(sessionUser.getCurrentTravelId());
+
+        ResponseData<TravelCountryInfoDto> resData = new ResponseData<>(travelCountryInfo, SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
+        return ResponseEntity.ok(resData);
+    }
+q
+
+
 }
