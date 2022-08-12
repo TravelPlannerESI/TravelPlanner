@@ -38,10 +38,12 @@ public class PlanDetailRepositoryCustom {
                 .fetch();
     }
 
-    public List<PlanDetail> finByPlanId(Integer planId) {
+    public List<PlanDetailListDto> finByPlanId(Integer planId) {
         return queryFactory
-                .select(planDetail)
+                .select(new QPlanDetailListDto(planDetail.planDetailId, plan.planId, planDetail.destinationName, plan.days, planDetail.cost, planDetail.memo, planDetail.vehicle,
+                        planDetail.travelTheme, planDetail.lat, planDetail.lng, planDetail.departureTime, planDetail.arrivalTime))
                 .from(planDetail)
+                .join(planDetail.plan, plan)
                 .where(planDetail.plan.planId.eq(planId))
                 .orderBy(planDetail.arrivalTime.asc().nullsLast())
                 .fetch();

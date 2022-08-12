@@ -46,9 +46,7 @@ public class PlanDetailService {
     }
 
     public List<PlanDetailListDto> findPlanDetailDays(Integer planId) {
-        return planDetailRepositoryCustom.finByPlanId(planId).stream()
-                .map(PlanDetailListDto::new)
-                .collect(Collectors.toList());
+        return planDetailRepositoryCustom.finByPlanId(planId);
     }
 
     private Travel getTravel(Integer travelId) {
