@@ -5,6 +5,7 @@ import com.travelplan.domain.travel.service.TravelService;
 import com.travelplan.domain.travel.web.repository.CustomTravelRepository;
 import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.global.config.webconfig.annotation.OauthUser;
+import com.travelplan.global.message.MqController;
 import com.travelplan.global.utils.responsedto.ResponseData;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,7 +30,7 @@ public class TravelApi {
 
     private final TravelService travelService;
     private final CustomTravelRepository customTravelRepository;
-    private final TravelMqController travelMqController;
+    private final MqController travelMqController;
 
     @PostMapping("/api/v1/travel")
     public ResponseEntity<ResponseData> travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
@@ -72,7 +73,6 @@ public class TravelApi {
         ResponseData<TravelCountryInfoDto> resData = new ResponseData<>(travelCountryInfo, SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
         return ResponseEntity.ok(resData);
     }
-
 
 
 }
