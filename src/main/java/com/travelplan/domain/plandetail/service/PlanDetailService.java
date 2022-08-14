@@ -40,17 +40,13 @@ public class PlanDetailService {
                 .collect(Collectors.toList());
 
         // plan detail list 조회
-        List<PlanDetailListDto> planDetails = planDetailRepositoryCustom.findByPlans(planList).stream()
-                .map(PlanDetailListDto::new)
-                .collect(Collectors.toList());
+        List<PlanDetailListDto> planDetails = planDetailRepositoryCustom.findByPlans(planList);
 
         return new PlanResponseDto(travel.getTravelName(), plans, planDetails);
     }
 
     public List<PlanDetailListDto> findPlanDetailDays(Integer planId) {
-        return planDetailRepositoryCustom.finByPlanId(planId).stream()
-                .map(PlanDetailListDto::new)
-                .collect(Collectors.toList());
+        return planDetailRepositoryCustom.finByPlanId(planId);
     }
 
     private Travel getTravel(Integer travelId) {
