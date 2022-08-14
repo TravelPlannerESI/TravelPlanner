@@ -74,5 +74,8 @@ public class TravelApi {
         return ResponseEntity.ok(resData);
     }
 
+    public ResponseEntity<ResponseData> travelModify(@Validated @RequestBody TravelFormDto travelFormDto, @OauthUser SessionUser sessionUser) {
+        return null;
+    }
 
 }

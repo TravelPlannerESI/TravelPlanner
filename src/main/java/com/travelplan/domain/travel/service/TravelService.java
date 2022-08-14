@@ -5,9 +5,11 @@ import com.travelplan.domain.country.repository.CountryRepository;
 import com.travelplan.domain.member.domain.Member;
 import com.travelplan.domain.member.repository.MemberRepository;
 import com.travelplan.domain.plan.service.PlanService;
+import com.travelplan.domain.plan.util.PlanDateUtil;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.domain.travel.dto.TravelFormDto;
+import com.travelplan.domain.travel.dto.TravelModifyFormDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
@@ -73,32 +75,18 @@ public class TravelService {
         LocalDate travelEndDate = travel.getEndDate();
         LocalDate dtoEndDate = dto.getEndDate();
 
-        if (!isEqualDate(travelStartDate, dtoStartDate) &&
-            !isEqualDate(travelEndDate, dtoEndDate)) {                // 시작일과 종료일 두가지 다 변경 되었을 때
+        if (!isEqualDate(travelStartDate, dtoStartDate)) {          // 시작일이 변경 되었을 때
 
             if (travelStartDate.isBefore(dtoStartDate)) {           // 시작일이 그 이전으로 변경 되었을 때
                 // 시작일이 이전으로 변경되면 몇일자가 추가되는지 계산해야되고 그 갯수만큼 기존 데이터 days 더하기 해줘야 함
                 long betweenDateCount = PlanDateUtil.getBetweenDateCount(travelStartDate, dtoStartDate, false);
 
             } else {                                                // 시작일이 그 이후로 변경 되었을 때
-                // 시작일이 이후로 변경되면 몇일자가 추가되는지 계산해야되고 그 갯수만큼 기존 데이터 days 빼기 해줘야 함, 없어진 일자에 대해 제거 필요
-            }
-
-            if (travelEndDate.isBefore(dtoEndDate)) {               // 종료일이 그 이전으로 변경 되었을 때
-                // 종료일이 이전으로 변경되면 없어진 일자에 대해 제거 필요
-            } else {                                                // 종료일이 그 이후로 변경 되었을 때
-                // 종료일이 이후로 변경되면 추가
-            }
-
-        } else if (!isEqualDate(travelStartDate, dtoStartDate)) {    // 시작일만 변경 되었을 때
-
-            if (travelStartDate.isBefore(dtoStartDate)) {           // 시작일이 그 이전으로 변경 되었을 때
-
-            } else {                                                // 시작일이 그 이후로 변경 되었을 때
 
             }
 
-        } else if (!!isEqualDate(travelEndDate, dtoEndDate)) {        // 종료일만 변경 되었을 때
+        }
+        if (!!isEqualDate(travelEndDate, dtoEndDate)) {        // 종료일만 변경 되었을 때
 
             if (travelEndDate.isBefore(dtoEndDate)) {               // 종료일이 그 이전으로 변경 되었을 때
 
