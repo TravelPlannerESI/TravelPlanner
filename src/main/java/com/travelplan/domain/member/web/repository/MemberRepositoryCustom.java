@@ -9,14 +9,17 @@ import com.travelplan.domain.travel.domain.QTravel;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.user.domain.QUser;
 import com.travelplan.global.entity.code.JoinStatus;
+import com.travelplan.global.entity.code.MemberRole;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 
+import static com.querydsl.jpa.JPAExpressions.*;
 import static com.travelplan.domain.member.domain.QMember.*;
 import static com.travelplan.domain.travel.domain.QTravel.travel;
 import static com.travelplan.domain.user.domain.QUser.*;
+import static com.travelplan.global.entity.code.MemberRole.ADMIN;
 
 @Repository
 public class MemberRepositoryCustom {
@@ -33,8 +36,7 @@ public class MemberRepositoryCustom {
                 .selectOne()
                 .from(member)
                 .where(
-                        user.userId.eq(JPAExpressions
-                                        .select(user.userId)
+                        user.userId.eq(select(user.userId)
                                         .from(user)
                                         .where(user.email.eq(userEmail)))
                         .and(travel.travelId.eq(travelId))
@@ -53,5 +55,20 @@ public class MemberRepositoryCustom {
                 .join(member.user, user)
                 .where(member.travel.eq(travel).and(user.email.eq(email)))
                 .fetchOne();
+    }
+
+    public Boolean isMemberAdmin(Integer travelId, String email) {
+        return factory
+                .selectOne()
+                .from(member)
+                .where(
+                        member.user.userId.eq(
+                                select(user.userId)
+                                .from(user)
+                                .where(user.email.eq(email))
+                        ).and(travel.travelId.eq(travelId))
+                                .and(member.memberRole.eq(ADMIN))
+                )
+                .fetchFirst() != null;
     }
 }

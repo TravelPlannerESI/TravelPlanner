@@ -74,7 +74,9 @@ public class TravelApi {
         return ResponseEntity.ok(resData);
     }
 
-    public ResponseEntity<ResponseData> travelModify(@Validated @RequestBody TravelFormDto travelFormDto, @OauthUser SessionUser sessionUser) {
+    @PutMapping("/api/v1/travel")
+    public ResponseEntity<ResponseData> travelModify(@Validated @RequestBody TravelModifyFormDto dto, @OauthUser SessionUser sessionUser) {
+        travelService.modifyTravel(dto, sessionUser.getCurrentTravelId(), sessionUser.getEmail());
         return null;
     }
 

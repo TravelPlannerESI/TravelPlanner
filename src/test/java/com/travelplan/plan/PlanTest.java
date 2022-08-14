@@ -1,8 +1,10 @@
 package com.travelplan.plan;
 
 import com.travelplan.domain.plan.util.PlanDateUtil;
+import org.apache.tomcat.jni.Local;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -43,4 +45,16 @@ public class PlanTest {
 
     }
 
+    @Test
+    void asd() {
+        LocalDate start = LocalDate.of(2022, 06, 01);
+        LocalDate end = LocalDate.of(2022, 06, 03);
+        Map<Integer, LocalDate> betweenDateWithDays = PlanDateUtil.getBetweenDateWithDays(start, end, false);
+        long betweenDateCount = PlanDateUtil.getBetweenDateCount(start, end, false);
+        for (LocalDate ldt : betweenDateWithDays.values()) {
+            System.out.println("ldt = " + ldt);
+        }
+
+        System.out.println("betweenDateCount = " + betweenDateCount);
+    }
 }

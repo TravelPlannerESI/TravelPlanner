@@ -4,6 +4,9 @@ import com.travelplan.domain.country.domain.Country;
 import com.travelplan.domain.country.repository.CountryRepository;
 import com.travelplan.domain.member.domain.Member;
 import com.travelplan.domain.member.repository.MemberRepository;
+import com.travelplan.domain.member.web.repository.MemberRepositoryCustom;
+import com.travelplan.domain.plan.domain.Plan;
+import com.travelplan.domain.plan.repository.PlanRepository;
 import com.travelplan.domain.plan.service.PlanService;
 import com.travelplan.domain.plan.util.PlanDateUtil;
 import com.travelplan.domain.travel.domain.Travel;
@@ -20,6 +23,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -34,6 +38,8 @@ public class TravelService {
     private final PlanService planService;
     private final UserRepository userRepository;
     private final MemberRepository memberRepository;
+    private final MemberRepositoryCustom memberRepositoryCustom;
+    private final PlanRepository planRepository;
 
     @Transactional
     public TravelDto addTravel(TravelFormDto travelFormDto, String email) {
@@ -62,11 +68,22 @@ public class TravelService {
     }
 
     @Transactional
-    public void modifyTravel(TravelModifyFormDto travelModifyFormDto, Integer travelId) {
+    public void modifyTravel(TravelModifyFormDto travelModifyFormDto, Integer travelId, String email) {
+        // 본인이 여행일정의 ADMIN(방장)인지 확인
+        managerCheck(travelId, email);
+        // 나라 변경 (변경 되었을 시에만 동작)
         changeCountry(travelModifyFormDto);
         Travel travel = getTravel(travelId);
+        // Travel 변경 감지
         travel.modifyTravel(travelModifyFormDto);
+        // 멤버 추가 (추가 되었을 시에만 동작)
         addMember(travelModifyFormDto, travel);
+        // Plan Entity 일자 추가/수정 (일자가 변경 되었을 시에만 동작)
+        changeDate(travel, travelModifyFormDto);
+    }
+
+    private void managerCheck(Integer travelId, String email)  {
+        if (!memberRepositoryCustom.isMemberAdmin(travelId, email)) throw new IllegalStateException("권한이 없습니다.");
     }
 
     private void changeDate(Travel travel, TravelModifyFormDto dto) {
@@ -77,21 +94,33 @@ public class TravelService {
 
         if (!isEqualDate(travelStartDate, dtoStartDate)) {          // 시작일이 변경 되었을 때
 
-            if (travelStartDate.isBefore(dtoStartDate)) {           // 시작일이 그 이전으로 변경 되었을 때
-                // 시작일이 이전으로 변경되면 몇일자가 추가되는지 계산해야되고 그 갯수만큼 기존 데이터 days 더하기 해줘야 함
-                long betweenDateCount = PlanDateUtil.getBetweenDateCount(travelStartDate, dtoStartDate, false);
+            long betweenDateCount;
 
+            if (travelStartDate.isBefore(dtoStartDate)) {           // 시작일이 그 이전으로 변경 되었을 때
+                betweenDateCount = PlanDateUtil.getBetweenDateCount(dtoStartDate, travelStartDate, false);
+                planRepository.daysPlus(betweenDateCount, travel.getTravelId());
+                planService.addPlan(travel, dtoStartDate, travelStartDate.minusDays(1));
             } else {                                                // 시작일이 그 이후로 변경 되었을 때
+                // 지우기
+                betweenDateCount = PlanDateUtil.getBetweenDateCount(travelStartDate, dtoStartDate, false);
+                List<Plan> findPlans = planRepository.findByTravelIdAndDays(travel.getTravelId(), betweenDateCount);
+                planRepository.deleteAll(findPlans);
+                planRepository.daysMinus(betweenDateCount, travel.getTravelId());
 
             }
-
         }
         if (!!isEqualDate(travelEndDate, dtoEndDate)) {        // 종료일만 변경 되었을 때
 
+            long betweenDateCount;
+
             if (travelEndDate.isBefore(dtoEndDate)) {               // 종료일이 그 이전으로 변경 되었을 때
-
+                // 지우기
+                betweenDateCount = PlanDateUtil.getBetweenDateCount(dtoEndDate, travelEndDate, false);
+                List<Plan> findPlans = planRepository.findByTravelIdAndDays(travel.getTravelId(), betweenDateCount);
+                planRepository.deleteAll(findPlans);
             } else {                                                // 종료일이 그 이후로 변경 되었을 때
-
+                // 추가
+                planService.addPlan(travel, travelEndDate.plusDays(1), dtoEndDate);
             }
 
         }
