@@ -2,10 +2,12 @@ package com.travelplan.domain.travel.domain;
 
 import com.travelplan.domain.country.domain.Country;
 import com.travelplan.domain.travel.dto.TravelFormDto;
+import com.travelplan.domain.travel.dto.TravelModifyFormDto;
 import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.DynamicUpdate;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
+@DynamicUpdate
 public class Travel extends BaseDateAndCreatorEntity {
 
     public Travel(TravelFormDto travelFormDto) {
@@ -54,4 +57,11 @@ public class Travel extends BaseDateAndCreatorEntity {
         this.country = country;
     }
 
+    public void modifyTravel(TravelModifyFormDto dto) {
+        this.travelName = dto.getTravelName();
+        this.country = dto.getCountry();
+        this.startDate = dto.getStartDate();
+        this.endDate = dto.getEndDate();
+        this.totalCost = dto.getTotalCost();
+    }
 }
