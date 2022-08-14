@@ -5,11 +5,9 @@ import com.travelplan.domain.country.repository.CountryRepository;
 import com.travelplan.domain.member.domain.Member;
 import com.travelplan.domain.member.repository.MemberRepository;
 import com.travelplan.domain.plan.service.PlanService;
-import com.travelplan.domain.plan.util.PlanDateUtil;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.domain.travel.dto.TravelFormDto;
-import com.travelplan.domain.travel.dto.TravelModifyFormDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
@@ -139,16 +137,24 @@ public class TravelService {
 
     private void makeMembers(TravelFormDto travelFormDto, Travel travel, String email) {
         List<String> membersEmail = travelFormDto.getMembersEmail();
-        membersEmail.add(email);
-        List<User> users = userRepository.findByEmailIn(membersEmail);
-        users.forEach(user -> {
-            if (email.equals(user.getEmail()))
-                memberRepository.save(new Member(travel, user, JoinStatus.YES, MemberRole.ADMIN));
-            else memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST));
-        });
-        membersEmail.remove(membersEmail.size()-1);
+        makeMember(travel,email);
+        if(!isEmptyMemberList(membersEmail)){
+            makeMembersList(travel, membersEmail);
+        }
     }
 
+    private void makeMembersList(Travel travel, List<String> membersEmail) {
+        List<User> users = userRepository.findByEmailIn(membersEmail);
+        users.forEach(user -> memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST)));
+    }
 
+    private void makeMember(Travel travel, String email){
+        memberRepository.save(new Member(travel, userRepository.findByEmail(email).get(), JoinStatus.YES, MemberRole.ADMIN));
+    }
+
+    boolean isEmptyMemberList(List<String> memberList){
+        if(memberList == null) return true;
+        else return false;
+    }
 
 }

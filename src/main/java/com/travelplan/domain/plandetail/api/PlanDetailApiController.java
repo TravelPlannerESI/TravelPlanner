@@ -11,6 +11,7 @@ import com.travelplan.domain.plandetail.repository.PlanDetailRepository;
 import com.travelplan.domain.plandetail.service.PlanDetailService;
 import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.global.config.webconfig.annotation.OauthUser;
+import com.travelplan.global.message.MqController;
 import com.travelplan.global.utils.responsedto.ResponseData;
 import com.travelplan.global.utils.responsedto.constant.ResponseConstant;
 import lombok.RequiredArgsConstructor;
@@ -28,9 +29,11 @@ public class PlanDetailApiController {
     private final PlanDetailService planDetailService;
     private final PlanDetailRepository planDetailRepository;
     private final PlanRepository planRepository;
+    private final MqController mqController;
 
     @GetMapping("/planDetail")
     public ResponseEntity<ResponseData> planDetailList(@OauthUser SessionUser user) {
+        mqController.accessPlan(user);
         return ResponseEntity.ok(new ResponseData<>(planDetailService.findPlanDetail(user.getCurrentTravelId()), SEARCH.getSuccessCode(), SEARCH.getSuccessMessage()));
     }
 
@@ -43,7 +46,6 @@ public class PlanDetailApiController {
     public ResponseEntity<ResponseData> planDetailAdd(@OauthUser SessionUser user, @RequestBody PlanDetailAddFormDto planDetailAddFormDto) {
         planDetailAddFormDto.setTravelId(user.getCurrentTravelId());
         planDetailService.addPlanDetail(planDetailAddFormDto, user.getEmail());
-
         return new ResponseEntity(new ResponseData<>(ADD.getSuccessCode(), ADD.getSuccessMessage()), HttpStatus.CREATED);
     }
 
