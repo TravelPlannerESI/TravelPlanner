@@ -19,6 +19,10 @@ public class MqController {
     private static ConcurrentHashMap<Integer, List<AccMember>> curAccMap = new ConcurrentHashMap<>();
 
     public void send(SessionUser sessionUser, List<String> membersEmail,String travelName,Integer travelId) {
+        if(membersEmail!=null) sendAlarm(sessionUser, membersEmail, travelName, travelId);
+    }
+
+    private void sendAlarm(SessionUser sessionUser, List<String> membersEmail, String travelName, Integer travelId) {
         try {
             TravelInviteDto travelInviteDto = new TravelInviteDto(sessionUser.getName(), travelName, travelId, sessionUser.getPicture());
             MessageDto<TravelInviteDto> messageDto = new MessageDto<>(travelInviteDto,true);

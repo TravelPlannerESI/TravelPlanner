@@ -60,13 +60,24 @@ public class TravelService {
 
     private void makeMembers(TravelFormDto travelFormDto, Travel travel, String email) {
         List<String> membersEmail = travelFormDto.getMembersEmail();
-        membersEmail.add(email);
-        List<User> users = userRepository.findByEmailIn(membersEmail);
-        users.forEach(user -> {
-            if (email.equals(user.getEmail()))
-                memberRepository.save(new Member(travel, user, JoinStatus.YES, MemberRole.ADMIN));
-            else memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST));
-        });
-        membersEmail.remove(membersEmail.size()-1);
+        makeMember(travel,email);
+        if(!isEmptyMemberList(membersEmail)){
+            makeMembersList(travel, membersEmail);
+        }
     }
+
+    private void makeMembersList(Travel travel, List<String> membersEmail) {
+        List<User> users = userRepository.findByEmailIn(membersEmail);
+        users.forEach(user -> memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST)));
+    }
+
+    private void makeMember(Travel travel, String email){
+        memberRepository.save(new Member(travel, userRepository.findByEmail(email).get(), JoinStatus.YES, MemberRole.ADMIN));
+    }
+
+    boolean isEmptyMemberList(List<String> memberList){
+        if(memberList == null) return true;
+        else return false;
+    }
+
 }
