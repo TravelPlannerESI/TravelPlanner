@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TravelRepositoryCustom {
 
-    Boolean existAlreadyJoin(List<User> users);
+    Boolean existAlreadyJoin(Integer travelId, List<User> users);
 
     TravelModifyDto findModifyDtoByTravelId(Integer travelId);
 }

@@ -33,12 +33,12 @@ public class TravelRepositoryImpl implements TravelRepositoryCustom {
     }
 
     @Override
-    public Boolean existAlreadyJoin(List<User> users) {
+    public Boolean existAlreadyJoin(Integer travelId, List<User> users) {
         return queryFactory
                 .selectOne()
                 .from(travel)
                 .leftJoin(member)
-                .on(travel.travelId.eq(member.travel.travelId).and(member.user.in(users)))
+                .on(travel.travelId.eq(travelId).and(travel.travelId.eq(member.travel.travelId)).and(member.user.in(users)))
                 .where(member.joinStatus.eq(YES).or(member.joinStatus.eq(EMPTY)))
                 .fetchFirst() != null;
     }

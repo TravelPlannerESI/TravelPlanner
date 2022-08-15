@@ -141,13 +141,13 @@ public class TravelService {
     private void addMember(TravelModifyFormDto travelModifyFormDto, Travel travel) {
         if (travelModifyFormDto.existMembers()) {
             List<User> findUsers = userRepository.findUserIdsByEmails(travelModifyFormDto.getMembersEmail());
-            validationJoinMember(findUsers);
+            validationJoinMember(travel.getTravelId(), findUsers);
             findUsers.forEach((user) -> memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST)));
         }
     }
 
-    private void validationJoinMember(List<User> users) {
-        if (travelRepository.existAlreadyJoin(users) != null) throw new IllegalArgumentException("이미 초대를 보냈거나 참여중인 사람이 존재합니다.");
+    private void validationJoinMember(Integer travelId, List<User> users) {
+        if (travelRepository.existAlreadyJoin(travelId, users)) throw new IllegalArgumentException("이미 초대를 보냈거나 참여중인 사람이 존재합니다.");
     }
 
     private Travel getTravel(Integer travelId) {
