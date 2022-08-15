@@ -4,6 +4,7 @@ import com.querydsl.core.types.PredicateOperation;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import com.travelplan.domain.member.domain.Member;
 import com.travelplan.domain.member.domain.QMember;
 import com.travelplan.domain.travel.domain.QTravel;
 import com.travelplan.domain.travel.domain.Travel;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
+
+import java.util.List;
 
 import static com.querydsl.jpa.JPAExpressions.*;
 import static com.travelplan.domain.member.domain.QMember.*;
@@ -70,5 +73,14 @@ public class MemberRepositoryCustom {
                                 .and(member.memberRole.eq(ADMIN))
                 )
                 .fetchFirst() != null;
+    }
+
+    public List<String> findByTravelId(Integer travelId) {
+        return factory
+                .select(user.email)
+                .from(member)
+                .join(member.user, user)
+                .where(member.travel.travelId.eq(travelId))
+                .fetch();
     }
 }

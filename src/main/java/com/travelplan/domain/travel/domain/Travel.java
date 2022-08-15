@@ -8,9 +8,12 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.DynamicUpdate;
+import org.springframework.util.StringUtils;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+
+import static org.springframework.util.StringUtils.*;
 
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -58,10 +61,10 @@ public class Travel extends BaseDateAndCreatorEntity {
     }
 
     public void modifyTravel(TravelModifyFormDto dto) {
-        this.travelName = dto.getTravelName();
-        this.country = dto.getCountry();
-        this.startDate = dto.getStartDate();
-        this.endDate = dto.getEndDate();
-        this.totalCost = dto.getTotalCost();
+        if (hasText(dto.getTravelName())) this.travelName = dto.getTravelName();
+        if (dto.getCountry() != null) this.country = dto.getCountry();
+        if (dto.getStartDate() != null) this.startDate = dto.getStartDate();
+        if (dto.getEndDate() != null) this.endDate = dto.getEndDate();
+        if (dto.getTotalCost() != null) this.totalCost = dto.getTotalCost();
     }
 }

@@ -12,6 +12,7 @@ import com.travelplan.domain.plan.util.PlanDateUtil;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.domain.travel.dto.TravelDto;
 import com.travelplan.domain.travel.dto.TravelFormDto;
+import com.travelplan.domain.travel.dto.TravelModifyDto;
 import com.travelplan.domain.travel.dto.TravelModifyFormDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
 import com.travelplan.domain.user.domain.User;
@@ -22,8 +23,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import java.nio.file.AccessDeniedException;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -67,6 +68,12 @@ public class TravelService {
         return travelDto;
     }
 
+    public TravelModifyDto findTravelList(Integer travelId, String email) {
+        TravelModifyDto findTravelDto = travelRepository.findModifyDtoByTravelId(travelId);
+        findTravelDto.setMembersEmail(memberRepositoryCustom.findByTravelId(travelId));
+        return findTravelDto;
+    }
+
     @Transactional
     public void modifyTravel(TravelModifyFormDto travelModifyFormDto, Integer travelId, String email) {
         // 본인이 여행일정의 ADMIN(방장)인지 확인
@@ -87,12 +94,13 @@ public class TravelService {
     }
 
     private void changeDate(Travel travel, TravelModifyFormDto dto) {
+
         LocalDate travelStartDate = travel.getStartDate();
         LocalDate dtoStartDate = dto.getStartDate();
         LocalDate travelEndDate = travel.getEndDate();
         LocalDate dtoEndDate = dto.getEndDate();
 
-        if (!isEqualDate(travelStartDate, dtoStartDate)) {          // 시작일이 변경 되었을 때
+        if (dtoStartDate != null && !isEqualDate(travelStartDate, dtoStartDate)) {          // 시작일이 변경 되었을 때
 
             long betweenDateCount;
 
@@ -109,7 +117,7 @@ public class TravelService {
 
             }
         }
-        if (!!isEqualDate(travelEndDate, dtoEndDate)) {        // 종료일만 변경 되었을 때
+        if (dtoEndDate != null && !!isEqualDate(travelEndDate, dtoEndDate)) {        // 종료일만 변경 되었을 때
 
             long betweenDateCount;
 
@@ -147,6 +155,7 @@ public class TravelService {
     }
 
     private void changeCountry(TravelModifyFormDto travelModifyFormDto) {
+        if (!StringUtils.hasText(travelModifyFormDto.getCountryIsoAlp2())) return;
         Country country = countryRepository.findByCountryName(travelModifyFormDto.getCountryIsoAlp2())
                 .orElseThrow(NoSuchElementException::new);
         travelModifyFormDto.setCountry(country);
