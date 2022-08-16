@@ -117,7 +117,7 @@ public class TravelService {
 
             }
         }
-        if (dtoEndDate != null && !!isEqualDate(travelEndDate, dtoEndDate)) {        // 종료일만 변경 되었을 때
+        if (dtoEndDate != null && !isEqualDate(travelEndDate, dtoEndDate)) {        // 종료일만 변경 되었을 때
 
             long betweenDateCount;
 
