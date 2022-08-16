@@ -19,11 +19,7 @@ public class ExchangeRateWebService {
     public void updateAll(Map<String, ExchangeRate> exchangeRateMap) {
         List<ExchangeRate> list = repository.findAll();
 
-        for (ExchangeRate eri : list) {
-            ExchangeRate exchangeRateInfo = exchangeRateMap.get(eri.getCntySgn());
-            eri.update(exchangeRateInfo);
-        }
-
+        list.forEach(rate -> rate.update(exchangeRateMap.get(rate.getCntySgn())));
     }
 }
 
