@@ -24,7 +24,7 @@ public class PlanService {
         // 두 날짜의 차이를 가져온다.
         long betweenDateCount = PlanDateUtil.getBetweenDateCount(startDate, endDate, true);
         // 시작 일과 종료 일 사이의 날짜들을 가져온다.
-        Map<Integer, LocalDate> betweenDateWithDays = PlanDateUtil.getBetweenDateWithDays(startDate, endDate);
+        Map<Integer, LocalDate> betweenDateWithDays = PlanDateUtil.getBetweenDateWithDays(startDate, endDate, true);
 
         for (long i = 0; i < betweenDateCount; i++) {
             planRepository.save(new Plan(travel, Math.toIntExact(i), betweenDateWithDays.get(Math.toIntExact(i))));

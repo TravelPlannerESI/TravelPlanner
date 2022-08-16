@@ -119,7 +119,7 @@ public class PlanDateUtil {
      * @param endDate
      * @return Map<Integer Days, LocalDateTime date>
      */
-    public static Map<Integer, LocalDate> getBetweenDateWithDays(LocalDate startDate, LocalDate endDate) {
+    public static Map<Integer, LocalDate> getBetweenDateWithDays(LocalDate startDate, LocalDate endDate, boolean includeLastDay) {
         List<LocalDate> betweenDate = getBetweenDate(startDate, endDate);
 
         AtomicInteger index = new AtomicInteger();
@@ -128,7 +128,7 @@ public class PlanDateUtil {
                 .collect(Collectors.toMap(o -> index.getAndIncrement(), o -> o));
 
         // 마지막 날짜는 포함이 안되므로 추가
-        result.put(index.getAndIncrement(), endDate);
+        if (includeLastDay) result.put(index.getAndIncrement(), endDate);
 
         return result;
 
