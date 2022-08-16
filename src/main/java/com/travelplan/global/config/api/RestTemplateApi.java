@@ -6,11 +6,15 @@ import com.travelplan.domain.covid.domain.Covid;
 import com.travelplan.domain.covid.repository.CovidRepository;
 import com.travelplan.domain.covid.util.CovidApiTemplate;
 import com.travelplan.domain.covid.web.service.CovidWebService;
+import com.travelplan.domain.exchangerate.domain.ExchangeRate;
+import com.travelplan.domain.exchangerate.repository.ExchangeRateRepository;
+import com.travelplan.domain.exchangerate.web.service.ExchangeRateWebService;
 import com.travelplan.global.config.api.constant.RestTemplateConst;
 import com.travelplan.global.config.api.dto.*;
+import com.travelplan.global.config.api.dto.currency.CurrencyDto;
+import com.travelplan.global.config.api.dto.currency.Item;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.http.*;
@@ -29,6 +33,9 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
     private final CovidRepository covidRepository;
     private final CovidWebService covidWebService;
     private final CountryRepository countryRepository;
+    private final ExchangeRateRepository exchangeRateRepository;
+    private final ExchangeRateWebService exchangeRateWebService;
+
 
     // 호출 시 참조하는 인스턴스(캐싱 Data)
     public static List<CountryFormDto> countryFormList = null;
@@ -76,18 +83,23 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
     private void mergeCovidData(boolean isInsert) {
         // 요청 생성
         HttpEntity request = getJsonRequest();
+        HttpEntity xmlRequest = getXmlRequest();
 
         new CovidApiTemplate(covidRepository, countryRepository) {
             @Override
             protected void logic() {
                 WarningDto warningDto = callApi(RestTemplateConst.WARNING_API, HttpMethod.GET, request, WarningDto.class, getFullParam());
                 PcrDto pcrDto = callApi(RestTemplateConst.PCR_API, HttpMethod.GET, request, PcrDto.class, getFullParam());
+                CurrencyDto currencyDto = callApi(RestTemplateConst.CURRENCY_API, HttpMethod.GET, xmlRequest, CurrencyDto.class, getCurrencyParam());
+
 
                 countryFormList = CountryFormDto.of(warningDto, pcrDto);
                 if (isInsert) {
                     covidRepository.saveAll(convertCovidEntityList(countryFormList));
+                    exchangeRateRepository.saveAll(convertExchangeRateEntityList(currencyDto.getBody().getItems()));
                 } else {
                     covidWebService.updateAll(convertCovidEntityMap(countryFormList));
+                    exchangeRateWebService.updateAll(convertExchangeRateEntityMap(currencyDto.getBody().getItems()));
                 }
 
                 countryFormListWithCoordinate = countryRepository.selectCountryInfo();
@@ -128,10 +140,28 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
         return covidList;
     }
 
+    private List<ExchangeRate> convertExchangeRateEntityList(List<Item> exchangeRate) {
+        List<ExchangeRate> list = new ArrayList<>();
+        for (Item dto : exchangeRate) {
+            list.add(new ExchangeRate(dto));
+        }
+
+        return list;
+    }
+
     private Map<String, Covid> convertCovidEntityMap(List<CountryFormDto> countryFormList) {
         Map<String, Covid> covidMap = new HashMap<>();
         for (CountryFormDto dto : countryFormList) {
             covidMap.put(dto.getCountryIsoAlp2(), new Covid(dto));
+        }
+
+        return covidMap;
+    }
+
+    private Map<String, ExchangeRate> convertExchangeRateEntityMap(List<Item> exchangeRate) {
+        Map<String, ExchangeRate> covidMap = new HashMap<>();
+        for (Item dto : exchangeRate) {
+            covidMap.put(dto.getCntySgn(), new ExchangeRate(dto));
         }
 
         return covidMap;
@@ -148,6 +178,21 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
         // ContentType, Accept 설정
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+
+        return new HttpEntity(headers);
+    }
+
+    /**
+     * HttpHeader 생성 메소드 ( XML )
+     * @return HttpHeaders
+     */
+    private HttpEntity getXmlRequest() {
+        // 해더 생성
+        HttpHeaders headers = new HttpHeaders();
+
+        // ContentType, Accept 설정
+        headers.setContentType(MediaType.APPLICATION_XML);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_XML));
 
         return new HttpEntity(headers);
     }
@@ -183,6 +228,11 @@ public class RestTemplateApi implements ApplicationListener<ContextRefreshedEven
     private String[] getFullParam() {
         return new String[]{RestTemplateConst.SERVICE_KEY_VALUE, RestTemplateConst.RETURN_TYPE_VALUE,
                 RestTemplateConst.NUM_OF_ROWS_VALUE, RestTemplateConst.PAGE_NO_VALUE};
+    }
+
+    private String[] getCurrencyParam() {
+        return new String[]{RestTemplateConst.CURRENCY_SERVICE_VALUE, RestTemplateConst.APPLY_BGN_DT_VALUE,
+                RestTemplateConst.WEEK_FXRT_TPCD_VALUE};
     }
 
 }

@@ -1,5 +1,6 @@
 package com.travelplan.domain.plan.domain;
 
+import com.travelplan.domain.plandetail.domain.PlanDetail;
 import com.travelplan.domain.travel.domain.Travel;
 import com.travelplan.global.entity.base.BaseDateAndCreatorEntity;
 import lombok.Getter;
@@ -10,6 +11,8 @@ import javax.persistence.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static lombok.AccessLevel.PROTECTED;
 
@@ -27,8 +30,8 @@ public class Plan extends BaseDateAndCreatorEntity {
     @JoinColumn(name = "travel_id")
     private Travel travel;
 
-//    @OneToMany(mappedBy = "plan")
-//    private List<PlanDetail> planDetails = new ArrayList<>();
+    @OneToMany(mappedBy = "plan")
+    private List<PlanDetail> planDetails = new ArrayList<>();
 
     private Integer days;
 

@@ -1,6 +1,7 @@
 package com.travelplan.domain.country.domain;
 
 import com.travelplan.domain.covid.domain.Covid;
+import com.travelplan.domain.exchangerate.domain.ExchangeRate;
 import com.travelplan.global.config.api.dto.CountryWithCoordinateFormDto;
 import com.travelplan.global.entity.base.BaseDateEntity;
 import lombok.AccessLevel;
@@ -26,6 +27,10 @@ public class Country extends BaseDateEntity {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_iso_alp2")
     private Covid covid;
+
+//    @OneToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "cntySgn")
+//    private ExchangeRate currency;
 
     public Country(CountryWithCoordinateFormDto dto) {
 //        this.countryIsoAlp2 = dto.getCountry_iso_alp2();
