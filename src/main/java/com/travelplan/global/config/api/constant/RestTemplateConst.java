@@ -1,5 +1,9 @@
 package com.travelplan.global.config.api.constant;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 public interface RestTemplateConst {
     String BASE_DIR = "http://apis.data.go.kr";
     // 격리 단계 API
@@ -27,4 +31,24 @@ public interface RestTemplateConst {
     String PCR_API = BASE_DIR + PCR_API_URL + PARAMS;
     String COORDINATE_API = "https://www.travelmakerkorea.com/api/newsList";
 
+
+    /* -------------------------------------------------------- */
+    // 환율 정보
+
+    // 환율 정보 API
+    String CURRENCY_API_URL = "/1220000/retrieveTrifFxrtInfo/getRetrieveTrifFxrtInfo";
+
+    // 환율 정보 파라미터 값
+    String CURRENCY_SERVICE_VALUE = "Ku5qfW/3nMsFEByRJWl8Y6lXrw3YdUInk3ehIViSXKaa2CvbD00XJJYme/O5FbLWFheHgKQJZi257JyUG9o7SA==";
+    String APPLY_BGN_DT_VALUE = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));   // 조회 년/월/일
+    String WEEK_FXRT_TPCD_VALUE = "1";  // 수출: 1,  수입 : 2
+
+    String APPLY_BGN_DT_KEY = "aplyBgnDt={applyBgnDt}";
+    String WEEK_FXRT_TPCD_KEY = "weekFxrtTpcd={weekFxrtTpcd}";  // 수출: 1,  수입 : 2
+
+
+    String CURRENCY_PARAMS = "?" + SERVICE_KEY + "&" + APPLY_BGN_DT_KEY + "&" + WEEK_FXRT_TPCD_KEY;
+
+
+    String CURRENCY_API = BASE_DIR + CURRENCY_API_URL + CURRENCY_PARAMS;
 }
