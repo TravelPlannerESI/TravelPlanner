@@ -1,6 +1,6 @@
 package com.travelplan.domain.travel.dto;
 
-import com.travelplan.domain.travel.domain.Travel;
+import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,25 +9,25 @@ import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
+
 @Getter
 @Setter
-public class TravelFormDto {
+public class TravelModifyDto {
 
-    @NotBlank
     private String travelName;
-    @NotNull
     private String countryIsoAlp2;
-    @NotNull
     private LocalDate startDate;
-    @NotNull
     private LocalDate endDate;
     private List<String> membersEmail;
-    private String inviteCode;
     private Integer totalCost;
 
-
-    public boolean existMembers() {
-        return membersEmail.size() > 0 ? true : false;
+    @QueryProjection
+    public TravelModifyDto(String travelName, String countryIsoAlp2, LocalDate startDate, LocalDate endDate, Integer totalCost) {
+        this.travelName = travelName;
+        this.countryIsoAlp2 = countryIsoAlp2;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.totalCost = totalCost;
     }
 
 }

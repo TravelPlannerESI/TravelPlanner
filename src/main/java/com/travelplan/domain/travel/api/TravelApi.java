@@ -1,6 +1,7 @@
 package com.travelplan.domain.travel.api;
 
 import com.travelplan.domain.travel.dto.*;
+import com.travelplan.domain.travel.repository.TravelRepository;
 import com.travelplan.domain.travel.service.TravelService;
 import com.travelplan.domain.travel.web.repository.CustomTravelRepository;
 import com.travelplan.global.config.auth.oauth2.session.SessionUser;
@@ -31,6 +32,7 @@ public class TravelApi {
     private final TravelService travelService;
     private final CustomTravelRepository customTravelRepository;
     private final MqController travelMqController;
+    private final TravelRepository travelRepository;
 
     @PostMapping("/api/v1/travel")
     public ResponseEntity<ResponseData> travelSave(@Validated @RequestBody TravelFormDto travelFormDto,@OauthUser SessionUser sessionUser) {
@@ -45,6 +47,13 @@ public class TravelApi {
         Page<TravelDto> pageResult = customTravelRepository.findByTravelInMemberOrderByDesc(sessionUser.getEmail(), pageable);
         ResponseData<Page<TravelDto>> resData = new ResponseData<>(pageResult, SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
         return ResponseEntity.ok(resData);
+    }
+
+    @GetMapping("/api/v1/manage/travel")
+    public ResponseEntity<ResponseData<TravelModifyDto>> travelManageList(@OauthUser SessionUser user) {
+        ResponseData<TravelModifyDto> result = new ResponseData<>(travelService.findTravelList(user.getCurrentTravelId(), user.getEmail()),
+                SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
+        return ResponseEntity.ok(result);
     }
 
     private boolean isLogin(String email, HttpServletRequest request) {
@@ -74,5 +83,10 @@ public class TravelApi {
         return ResponseEntity.ok(resData);
     }
 
+    @PutMapping("/api/v1/travel")
+    public ResponseEntity<ResponseData> travelModify(@RequestBody TravelModifyFormDto dto, @OauthUser SessionUser sessionUser) {
+        travelService.modifyTravel(dto, sessionUser.getCurrentTravelId(), sessionUser.getEmail());
+        return null;
+    }
 
 }
