@@ -1,8 +1,6 @@
 package com.travelplan.global.exception;
 
-import com.travelplan.global.exception.constant.ErrorConstant;
 import com.travelplan.global.exception.customexception.IdNotFoundException;
-import com.travelplan.global.exception.dto.CustomErrorResult;
 import com.travelplan.global.exception.dto.CustomFieldError;
 import com.travelplan.global.exception.dto.ErrorResponse;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +9,6 @@ import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +23,11 @@ public class GlobalControllerAdvice {
     private final MessageSource messageSource;
 
 
+
+    /* -------------------------------------------------------------------------------------------- */
+    // 4XX
+
+
     /**
      * Global Form Validation 유효성 검사
      *
@@ -36,7 +38,7 @@ public class GlobalControllerAdvice {
      * javax.validation.constraints.Length
      * javax.validation.constraints.NotNull
      *
-     * @return ResponseEntity<ErrorResponse < List < CustomFieldError>>>
+     * @return ResponseEntity<ErrorResponse<List<CustomFieldError>>>
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse<List<CustomFieldError>>> methodArgumentNotValidException(MethodArgumentNotValidException e) {
@@ -63,7 +65,11 @@ public class GlobalControllerAdvice {
     }
 
 
-
+    /**
+     * 사용자의 Email로 DB의 데이터를 조회할 때 email에 대한 정보가 없으면 발생
+     *
+     * @return ResponseEntity<ErrorResponse<String>>
+     */
     @ExceptionHandler(IdNotFoundException.class)
     public ResponseEntity<ErrorResponse<String>> idNotFoundException(IdNotFoundException e) {
         ErrorResponse<String> response = CreateError.errorResult(e.getMessage());
@@ -72,13 +78,23 @@ public class GlobalControllerAdvice {
     }
 
 
-    @ExceptionHandler(TempException.class)
-    public ResponseEntity<ErrorResponse<String>> tempException(TempException e) {
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponse<String>> illegalArgumentException(IllegalArgumentException e) {
+        ErrorResponse<String> response = CreateError.errorResult(e.getMessage());
 
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+
+
+
+    /* -------------------------------------------------------------------------------------------- */
+    // 5XX
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErrorResponse<String>> illegalStateException(IllegalStateException e) {
         ErrorResponse<String> response = CreateError.errorResult(e.getMessage());
 
         return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 
 }
