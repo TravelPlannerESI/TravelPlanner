@@ -17,6 +17,7 @@ import com.travelplan.domain.travel.dto.TravelModifyFormDto;
 import com.travelplan.domain.travel.repository.TravelRepository;
 import com.travelplan.domain.user.domain.User;
 import com.travelplan.domain.user.repository.UserRepository;
+import com.travelplan.global.config.auth.oauth2.config.properties.GlobalProperties;
 import com.travelplan.global.entity.code.JoinStatus;
 import com.travelplan.global.entity.code.MemberRole;
 import lombok.RequiredArgsConstructor;
@@ -42,6 +43,7 @@ public class TravelService {
     private final MemberRepositoryCustom memberRepositoryCustom;
     private final PlanRepository planRepository;
 
+
     @Transactional
     public TravelDto addTravel(TravelFormDto travelFormDto, String email) {
         String inviteCode = UUID.randomUUID().toString();
@@ -60,7 +62,7 @@ public class TravelService {
         makeMembers(travelFormDto, travel, email);
 
         TravelDto travelDto = new TravelDto(travelFormDto);
-        travelDto.setInviteCode(inviteCode);
+        travelDto.setInviteCode(makeInviteUrl(inviteCode));
 
         // 날짜 별 plan 추가
         planService.addPlan(travel, travel.getStartDate(), travel.getEndDate());
@@ -173,14 +175,18 @@ public class TravelService {
         List<User> users = userRepository.findByEmailIn(membersEmail);
         users.forEach(user -> memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST)));
     }
-
-    private void makeMember(Travel travel, String email){
+    @Transactional
+    public void makeMember(Travel travel, String email){
         memberRepository.save(new Member(travel, userRepository.findByEmail(email).get(), JoinStatus.YES, MemberRole.ADMIN));
     }
 
     boolean isEmptyMemberList(List<String> memberList){
         if(memberList == null) return true;
         else return false;
+    }
+
+    private String makeInviteUrl(String inviteCode){
+        return String.format("%s%s%s", GlobalProperties.FRONT_URL,"?inviteCode=",inviteCode);
     }
 
 }
