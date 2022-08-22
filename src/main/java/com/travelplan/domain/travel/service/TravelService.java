@@ -175,7 +175,7 @@ public class TravelService {
         List<User> users = userRepository.findByEmailIn(membersEmail);
         users.forEach(user -> memberRepository.save(new Member(travel, user, JoinStatus.EMPTY, MemberRole.GUEST)));
     }
-    @Transactional
+
     public void makeMember(Travel travel, String email){
         memberRepository.save(new Member(travel, userRepository.findByEmail(email).get(), JoinStatus.YES, MemberRole.ADMIN));
     }
@@ -187,6 +187,13 @@ public class TravelService {
 
     private String makeInviteUrl(String inviteCode){
         return String.format("%s%s%s", GlobalProperties.FRONT_URL,"?inviteCode=",inviteCode);
+    }
+
+    @Transactional
+    public boolean createInviteMember(Travel travel, String email){
+        boolean isMemberInTravel = memberRepositoryCustom.isMemberInTravel(travel.getTravelId(), email);
+        if(!isMemberInTravel) memberRepository.save(new Member(travel, userRepository.findByEmail(email).get(), JoinStatus.YES, MemberRole.GUEST));
+        return isMemberInTravel;
     }
 
 }

@@ -7,7 +7,7 @@ import com.travelplan.domain.travel.service.TravelService;
 import com.travelplan.domain.travel.web.repository.CustomTravelRepository;
 import com.travelplan.global.config.auth.oauth2.session.SessionUser;
 import com.travelplan.global.config.webconfig.annotation.OauthUser;
-import com.travelplan.global.exception.customexception.InviteCodeNotFoundException;
+import com.travelplan.global.exception.customexception.InviteValidException;
 import com.travelplan.global.message.MqController;
 import com.travelplan.global.utils.responsedto.ResponseData;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static com.travelplan.global.utils.responsedto.constant.ResponseConstant.*;
@@ -95,16 +94,17 @@ public class TravelApi {
     }
 
     @GetMapping("/travel/{inviteCode}")
-    public ResponseEntity<ResponseData<TravelDto>> travelInviteManage(@OauthUser SessionUser sessionUser,@PathVariable String inviteCode) {
+    public ResponseEntity<ResponseData<?>> travelInviteManage(@OauthUser SessionUser sessionUser,@PathVariable String inviteCode) {
         Optional<Travel> inviteTravel = Optional.ofNullable(travelRepository.findByInviteCode(inviteCode));
-        Travel travel = inviteTravel.orElseThrow(InviteCodeNotFoundException::new);
+        Travel travel = inviteTravel.orElseThrow(()-> new InviteValidException("유효하지 않은 초대코드 입니다."));
 
         String email = sessionUser.getEmail();
-        travelService.makeMember(travel,email);
-        TravelDto travelDto = new TravelDto(travel);
-        travelDto.setTravelId(travel.getTravelId());
-        ResponseData<TravelDto> resData = new ResponseData<>(travelDto, SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
+        boolean isMemberInTravel = travelService.createInviteMember(travel, email);
 
+        if(isMemberInTravel) throw new InviteValidException("이미 참여중이거나 초대받은 여행입니다.");
+
+        TravelInviteInfoDto travelInviteInfoDto = new TravelInviteInfoDto(travel);
+        ResponseData<TravelInviteInfoDto> resData = new ResponseData<>(travelInviteInfoDto,SEARCH.getSuccessCode(), SEARCH.getSuccessMessage());
         return ResponseEntity.ok(resData);
     }
 
