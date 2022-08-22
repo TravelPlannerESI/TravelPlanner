@@ -83,4 +83,14 @@ public class MemberRepositoryCustom {
                 .where(member.travel.travelId.eq(travelId))
                 .fetch();
     }
+
+    public boolean isMemberInTravel(Integer travelId , String email){
+        return factory
+                .select(member.count())
+                .from(member)
+                .join(member.user, user)
+                .where(user.email.eq(email).and(member.travel.travelId.eq(travelId)))
+                .fetchOne() > 0 ? true : false;
+    }
+
 }

@@ -1,7 +1,7 @@
 package com.travelplan.global.exception;
 
 import com.travelplan.global.exception.customexception.IdNotFoundException;
-import com.travelplan.global.exception.customexception.InviteCodeNotFoundException;
+import com.travelplan.global.exception.customexception.InviteValidException;
 import com.travelplan.global.exception.dto.CustomFieldError;
 import com.travelplan.global.exception.dto.ErrorResponse;
 import lombok.RequiredArgsConstructor;
@@ -86,9 +86,9 @@ public class GlobalControllerAdvice {
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InviteCodeNotFoundException.class)
-    public ResponseEntity<ErrorResponse<String>> inviteCodeNotFound(InviteCodeNotFoundException e) {
-        ErrorResponse<String> response = CreateError.errorResult("유효하지 않은 초대코드 입니다.");
+    @ExceptionHandler(InviteValidException.class)
+    public ResponseEntity<ErrorResponse<String>> inviteCodeNotFound(InviteValidException e) {
+        ErrorResponse<String> response = CreateError.errorResult(e.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
