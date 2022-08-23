@@ -192,7 +192,7 @@ public class TravelService {
     @Transactional
     public boolean createInviteMember(Travel travel, String email){
         boolean isMemberInTravel = memberRepositoryCustom.isMemberInTravel(travel.getTravelId(), email);
-        if(!isMemberInTravel) memberRepository.save(new Member(travel, userRepository.findByEmail(email).get(), JoinStatus.YES, MemberRole.GUEST));
+        if(!isMemberInTravel) memberRepository.save(new Member(travel, userRepository.findByEmail(email).get(), JoinStatus.EMPTY, MemberRole.GUEST));
         return isMemberInTravel;
     }
 
