@@ -61,7 +61,7 @@ class PlanServiceTest {
 //        travelFormDto.setCountryDto(countryDto);
     }
 
-    @Test
+//    @Test
     void addPlan() {
         Country getCountry = em.createQuery("select c from Country c where c.countryName = :name", Country.class)
                 .setParameter("name", "일본")

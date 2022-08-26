@@ -81,7 +81,7 @@ class TravelTest {
     @Autowired
     CustomTravelRepository customTravelRepository;
 
-    @Test
+//    @Test
     public void 여행을_계획하고_저장한다() {
         Country getCountry = em.createQuery("select c from Country c where c.countryName = :name", Country.class)
                 .setParameter("name", "일본")
@@ -110,7 +110,7 @@ class TravelTest {
         }
     }
 
-    @Test
+//    @Test
     public void 여행을_계획하고_저장한다_로직_테스트() throws Exception {
 
         String content = objectMapper.writeValueAsString(travelFormDto);

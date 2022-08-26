@@ -32,12 +32,12 @@ class MenuTest {
     @PersistenceContext
     EntityManager em;
 
-    @Autowired
+//    @Autowired
     MenuRepository menuRepository;
 
     JPAQueryFactory query;
 
-    @BeforeEach
+//    @BeforeEach
     void init() {
         query = new JPAQueryFactory(em);
 
@@ -78,7 +78,7 @@ class MenuTest {
 
     }
 
-    @Test
+//    @Test
     public void 메뉴_생성_테스트() throws Exception {
         Menu rootMenu = menuRepository.findByMenuName("전체조회");
         Menu vali1 = menuRepository.findByMenuName("날짜별 조회");
@@ -87,7 +87,7 @@ class MenuTest {
         assertThat(rootMenu.getMenus()).containsExactly(vali1, vali2);
     }
 
-    @Test
+//    @Test
     public void 메뉴_삭제_테스트() {
         Menu deleteMenu = menuRepository.findByMenuName("승인된 멤버");
         menuRepository.deleteMenu(deleteMenu,deleteMenu.getId());
