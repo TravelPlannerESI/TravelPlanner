@@ -24,7 +24,7 @@ public interface RestTemplateConst {
     String PAGE_NO = "pageNo={pageNo}";                // 페이지 번호
 
     // 파라미터 정보 조합
-    String PARAMS = "?&" + SERVICE_KEY + "&" + RETURN_TYPE + "&" + NUM_OF_ROWS + "&" + PAGE_NO;
+    String PARAMS = "?" + SERVICE_KEY + "&" + RETURN_TYPE + "&" + NUM_OF_ROWS + "&" + PAGE_NO;
 
     // 최종 API URL
     String WARNING_API = BASE_DIR + WARNING_API_URL + PARAMS;
