@@ -1,0 +1,12 @@
+spring:
+  messages:
+    basename: errors
+
+  profiles:
+    include: oauth,db
+
+server:
+  port: 8095
+  servlet:
+    encoding:
+      charset: UTF-8
