@@ -28,14 +28,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class TravelMemberJoinResultTest {
 
-    @Autowired
+//    @Autowired
     private MockMvc mvc;
 
-    @Autowired
+//    @Autowired
     private ObjectMapper objectMapper;
 
 
-    @Test
+//    @Test
     @DisplayName("여행 계획에 초대 받은 멤버 - 승인(YES) / 거절(NO)")
     public void response() throws Exception {
 
@@ -54,7 +54,7 @@ public class TravelMemberJoinResultTest {
                 .andDo(print());
     }
 
-    @Test
+//    @Test
     @DisplayName("여행 팀장이 초대를 거절한 멤버에게 요청 재전송")
     public void resend() throws Exception {
 
