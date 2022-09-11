@@ -44,7 +44,7 @@ public class CustomTravelRepository {
 
     public Page<TravelDto> findByTravelInMemberOrderByDesc(String email , Pageable pageable) {
         List<TravelDto> fetchContent = query.select(
-                        new QTravelDto(travel.travelName, travel.startDate, travel.endDate, travel.travelId,travel.country.countryName)
+                        new QTravelDto(travel.travelName, travel.startDate, travel.endDate, travel.travelId,country.countryName)
                 ).from(member)
                 .join(member.user, user)
                 .join(member.travel, travel)
