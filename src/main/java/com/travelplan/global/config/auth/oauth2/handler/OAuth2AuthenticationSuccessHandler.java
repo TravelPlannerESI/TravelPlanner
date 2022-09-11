@@ -21,6 +21,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         String targetUrl = GlobalProperties.LOGIN_SUCCESS_URL;
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        log.info("targetUrl = {}",targetUrl);
     }
 
 }
